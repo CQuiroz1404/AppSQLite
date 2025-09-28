@@ -6,6 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".Registro">
 
     <!-- Email -->
@@ -14,6 +15,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Email"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roland_variable_full"
         android:inputType="textEmailAddress"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +31,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Contraseña"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roland_variable_full"
         android:inputType="textPassword"
         app:layout_constraintTop_toBottomOf="@id/editEmail"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +47,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Registrar"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:backgroundTint="#D00000"
+        android:fontFamily="@font/roland_variable_full"
         app:layout_constraintTop_toBottomOf="@id/editPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
