@@ -1,6 +1,8 @@
 package com.example.appconsqlite;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,11 +20,30 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogin, btnRegister;
     private UserRepository userRepo;
 
+    // Constantes para SharedPreferences
+    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
+    private static final String IS_LOGGED_IN = "isLoggedIn";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Activar Edge-to-Edge
+        // ===============================================
+        // LÓGICA DE PERSISTENCIA DE SESIÓN: Comprobar estado
+        // ===============================================
+        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPref.getBoolean(IS_LOGGED_IN, false);
+
+        if (isLoggedIn) {
+            // Si ya está logeado, ir directamente al menú
+            Intent intent = new Intent(MainActivity.this, Menu.class);
+            startActivity(intent);
+            finish(); // Cierra esta actividad para que no se pueda volver
+            return; // Termina onCreate aquí
+        }
+        // ===============================================
+
+        // Activar Edge-to-Edge si no ha retornado
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -55,10 +76,17 @@ public class MainActivity extends AppCompatActivity {
             if (logeado) {
                 Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show();
 
+                // ===============================================
+                // GUARDAR ESTADO DE SESIÓN al hacer Login
+                // ===============================================
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean(IS_LOGGED_IN, true);
+                editor.apply();
+
                 // Abrir Menu Activity
                 Intent intent = new Intent(MainActivity.this, Menu.class);
                 startActivity(intent);
-                finish(); // opcional: cerrar MainActivity para que no vuelva con el botón atrás
+                finish();
             } else {
                 Toast.makeText(this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
             }
@@ -72,4 +100,3 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-

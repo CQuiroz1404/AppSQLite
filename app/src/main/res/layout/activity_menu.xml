@@ -25,7 +25,8 @@
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingTop="20dp"  android:paddingBottom="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
                 android:fitsSystemWindows="true">
 
                 <ImageButton
@@ -255,8 +256,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:orientation="vertical"
-        android:background="@android:color/white"
-        android:fitsSystemWindows="true">
+        android:background="#D32F2F" android:fitsSystemWindows="true">
 
         <TextView
             android:layout_width="match_parent"
@@ -265,25 +265,23 @@
             android:fontFamily="@font/roland_variable_full"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@android:color/white"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:background="#EEEEEE" />
-
-        <Button
-            android:id="@+id/btnNavCarrito"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver Carrito"
-            android:fontFamily="@font/roland_variable_full"
-            android:backgroundTint="#FF9800"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:background="#990C0C" /> <Button
+        android:id="@+id/btnNavCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver Carrito"
+        android:fontFamily="@font/roland_variable_full"
+        android:backgroundTint="#FF9800"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
 
         <Button
             android:id="@+id/btnNavCuenta"
@@ -305,6 +303,17 @@
             android:fontFamily="@font/roland_variable_full"
             android:backgroundTint="#00BCD4"
             android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <Button
+            android:id="@+id/btnNavCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:fontFamily="@font/roland_variable_full"
+            android:backgroundTint="#F44336" android:textColor="@android:color/white"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
