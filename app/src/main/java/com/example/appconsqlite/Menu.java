@@ -14,6 +14,8 @@ public class Menu extends AppCompatActivity {
 
     int numero;
     int num1;
+
+    int num2;
     private Button btnAdd1, btnAdd2;
 
     @Override
