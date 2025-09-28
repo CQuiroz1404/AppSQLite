@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Menu extends AppCompatActivity {
 
+    int numero;
+
     private Button btnAdd1, btnAdd2;
 
     @Override
