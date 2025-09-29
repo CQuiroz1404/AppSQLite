@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText editEmail, editPassword;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     // Constantes para SharedPreferences
     private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
     private static final String IS_LOGGED_IN = "isLoggedIn";
+    private static final String USER_ID = "userId"; // ¡Nueva clave para guardar el ID!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (isLoggedIn) {
             // Si ya está logeado, ir directamente al menú
+            // No necesitamos el ID aquí, solo comprobamos si la sesión está activa.
             Intent intent = new Intent(MainActivity.this, Menu.class);
             startActivity(intent);
-            finish(); // Cierra esta actividad para que no se pueda volver
-            return; // Termina onCreate aquí
+            finish();
+            return;
         }
         // ===============================================
 
-        // Activar Edge-to-Edge si no ha retornado
+        // ... (Se mantiene la configuración inicial de la vista) ...
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -72,21 +76,29 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            // Lógica de login: NO CAMBIA
             boolean logeado = userRepo.loginUsuario(email, password);
             if (logeado) {
                 Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show();
 
-                // ===============================================
-                // GUARDAR ESTADO DE SESIÓN al hacer Login
-                // ===============================================
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean(IS_LOGGED_IN, true);
-                editor.apply();
+                // 1. Obtener el ID del usuario recién logeado
+                long userId = userRepo.obtenerUserId(email);
 
-                // Abrir Menu Activity
-                Intent intent = new Intent(MainActivity.this, Menu.class);
-                startActivity(intent);
-                finish();
+                if (userId != -1) {
+                    // 2. GUARDAR ESTADO DE SESIÓN Y EL ID DEL USUARIO
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean(IS_LOGGED_IN, true);
+                    editor.putLong(USER_ID, userId); // ¡Guardamos el ID!
+                    editor.apply();
+
+                    // Abrir Menu Activity
+                    Intent intent = new Intent(MainActivity.this, Menu.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // Esto no debería pasar si el login fue exitoso, pero es buena práctica.
+                    Toast.makeText(this, "Error al obtener ID de usuario.", Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
             }
