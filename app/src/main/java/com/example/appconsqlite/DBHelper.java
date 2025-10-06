@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     UserContract.UserEntry.COLUMN_DIRECCION + " TEXT," +
                     UserContract.UserEntry.COLUMN_FOTO_PERFIL_PATH + " TEXT)";
 
-    // Crear tabla de productos (Se mantiene igual)
+    // Crear tabla de productos
     private static final String SQL_CREATE_PRODUCTS =
             "CREATE TABLE IF NOT EXISTS " + ProductContract.ProductEntry.TABLE_NAME + " (" +
                     ProductContract.ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -42,6 +42,18 @@ public class DBHelper extends SQLiteOpenHelper {
         // Se crean las tablas con las nuevas estructuras
         db.execSQL(SQL_CREATE_PRODUCTS);
         db.execSQL(SQL_CREATE_USERS);
+        db.execSQL(
+                "CREATE TABLE " + ProductContract.ProductEntry.TABLE_NAME + " (" +
+                        ProductContract.ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        ProductContract.ProductEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                        ProductContract.ProductEntry.COLUMN_DESC + " TEXT, " +
+                        ProductContract.ProductEntry.COLUMN_PRICE + " REAL NOT NULL, " +
+                        ProductContract.ProductEntry.COLUMN_IMAGE_PATH + " TEXT, " +
+                        ProductContract.ProductEntry.COLUMN_USER_ID + " INTEGER, " +
+                        "FOREIGN KEY(" + ProductContract.ProductEntry.COLUMN_USER_ID + ") REFERENCES " +
+                        UserContract.UserEntry.TABLE_NAME + "(" + UserContract.UserEntry._ID + "))"
+        );
+
     }
 
     @Override

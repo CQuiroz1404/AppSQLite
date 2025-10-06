@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/etNombreProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Título del producto"
+            android:inputType="text"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_bg"
+            android:padding="12dp"
+            android:textColor="#212121"
+            android:textColorHint="#757575"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/etDescripcionProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_bg"
+            android:padding="12dp"
+            android:textColor="#212121"
+            android:textColorHint="#757575"
+            android:textSize="16sp"/>
+
+        <EditText
+            android:id="@+id/etPrecioProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_bg"
+            android:padding="12dp"
+            android:textColor="#212121"
+            android:textColorHint="#757575"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/ivImagenProducto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_marginBottom="8dp"
+            android:background="#E0E0E0"
+            android:padding="4dp"
+            android:contentDescription="Imagen del producto"/>
+
+        <Button
+            android:id="@+id/btnSeleccionarImagen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar imagen"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#D32F2F"
+            android:textColor="#FFFFFF"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="12dp"/>
+
+        <Button
+            android:id="@+id/btnSubirProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subir producto"
+            android:backgroundTint="#1976D2"
+            android:textColor="#FFFFFF"
+            android:paddingVertical="14dp"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+</ScrollView>
