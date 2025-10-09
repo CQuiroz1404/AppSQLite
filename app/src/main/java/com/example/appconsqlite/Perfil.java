@@ -33,17 +33,14 @@ public class Perfil extends AppCompatActivity {
     private TextView tvUserPhone;
     private TextView tvUserAddress;
 
-    // Contantes de SharedPreferences (deben coincidir con MainActivity)
+    // Constantes de SharedPreferences (deben coincidir con MainActivity)
     private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
     private static final String USER_ID = "userId";
 
     private UserRepository userRepo;
 
     // Vistas del menú de opciones
-    private LinearLayout llDireccion;
-    private LinearLayout llMetodosPago;
     private LinearLayout llAjustes;
-    private LinearLayout llCentroAyuda;
 
 
     @Override
@@ -69,10 +66,7 @@ public class Perfil extends AppCompatActivity {
         tvUserAddress = findViewById(R.id.tvUserAddress);
 
         // 2. Inicializar los contenedores de las opciones de menú
-        llDireccion = findViewById(R.id.llDireccion);
-        llMetodosPago = findViewById(R.id.llMetodosPago);
         llAjustes = findViewById(R.id.llAjustes);
-        llCentroAyuda = findViewById(R.id.llCentroAyuda);
 
         setupMenuListeners();
 
@@ -102,13 +96,15 @@ public class Perfil extends AppCompatActivity {
                     String fotoPath = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_FOTO_PERFIL_PATH));
 
                     // Establecer el Nombre Completo
-                    String fullName = nombre + " " + apellido;
-                    tvUserName.setText(fullName);
+                    String fullName = (nombre != null ? nombre : "") + " " + (apellido != null ? apellido : "");
+                    tvUserName.setText(fullName.trim().isEmpty() ? "Nombre y Apellido" : fullName.trim());
+
+                    // Establecer Email
                     tvUserEmail.setText(email);
 
                     // Establecer Teléfono y Dirección
-                    tvUserPhone.setText(telefono.isEmpty() ? "Teléfono: N/A" : "Teléfono: " + telefono);
-                    tvUserAddress.setText(direccion.isEmpty() ? "Dirección: N/A" : "Dirección: " + direccion);
+                    tvUserPhone.setText(telefono != null && !telefono.isEmpty() ? telefono : "Teléfono: N/A");
+                    tvUserAddress.setText(direccion != null && !direccion.isEmpty() ? direccion : "Dirección: N/A");
 
                     // ==========================================================
                     // LÓGICA FINAL PARA CARGAR LA FOTO (Maneja URI y RUTAS DE ARCHIVO)
@@ -187,20 +183,8 @@ public class Perfil extends AppCompatActivity {
      * Configura los listeners de clic para las opciones del menú de perfil.
      */
     private void setupMenuListeners() {
-        llDireccion.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Dirección", Toast.LENGTH_SHORT).show()
-        );
-
-        llMetodosPago.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Métodos de Pago", Toast.LENGTH_SHORT).show()
-        );
-
         llAjustes.setOnClickListener(v ->
                 Toast.makeText(this, "Navegando a Ajustes", Toast.LENGTH_SHORT).show()
-        );
-
-        llCentroAyuda.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Centro de Ayuda", Toast.LENGTH_SHORT).show()
         );
     }
 }

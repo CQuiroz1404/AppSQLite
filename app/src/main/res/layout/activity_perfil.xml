@@ -20,8 +20,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfilePicture"
@@ -47,8 +46,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/ivProfilePicture"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/tvUserEmail"
@@ -60,8 +58,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/tvUserName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/tvUserPhone"
@@ -73,8 +70,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/tvUserEmail"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/tvUserAddress"
@@ -86,184 +82,18 @@
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/tvUserPhone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Este es el contenedor para las opciones restantes del menú -->
     <LinearLayout
-        android:id="@+id/llQuickActions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFCDD2"
-        android:paddingVertical="12dp"
+        android:orientation="vertical"
         android:layout_marginTop="24dp"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintTop_toBottomOf="@id/tvUserAddress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Pedidos"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pedidos"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Lista de Deseo"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lista de Deseo"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Cupones"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cupones"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Mensajes"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mensajes"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/llQuickActions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <LinearLayout
-            android:id="@+id/llDireccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Direccion"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Dirección"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
-
-        <LinearLayout
-            android:id="@+id/llMetodosPago"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Metodos de Pago"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Métodos de Pago"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
 
         <LinearLayout
             android:id="@+id/llAjustes"
@@ -271,7 +101,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical">
@@ -282,8 +111,7 @@
                 android:text="Ajustes"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
+                android:paddingStart="16dp" />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -298,33 +126,6 @@
             android:layout_height="1dp"
             android:background="#E0E0E0" />
 
-        <LinearLayout
-            android:id="@+id/llCentroAyuda"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Centro de Ayuda"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Centro de Ayuda"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
