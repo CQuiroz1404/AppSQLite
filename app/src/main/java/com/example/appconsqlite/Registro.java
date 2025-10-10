@@ -16,6 +16,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
@@ -52,6 +53,9 @@ public class Registro extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // FORZAR MODO CLARO
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro);
@@ -245,13 +249,17 @@ public class Registro extends AppCompatActivity {
             return;
         }
 
-        // 2. Validación de coincidencia de contraseñas
+        // 2. Validación de formato de email
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Formato de email inválido", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // 3. Validación de coincidencia de contraseñas
         if (!password.equals(confirmPassword)) {
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
             return;
         }
-
-        // 3. Ya no se necesita lógica de permisos persistentes aquí.
 
         // 4. Llamada al repositorio con TODOS los datos
         boolean creado = userRepo.registrarUsuario(
@@ -261,11 +269,11 @@ public class Registro extends AppCompatActivity {
                 password,
                 telefono,
                 direccion,
-                profileImagePath // Siempre será un Path de archivo (interno o externo)
+                profileImagePath
         );
 
         if (creado) {
-            Toast.makeText(this, "Usuario " + nombre + " registrado correctamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "¡Bienvenido al Marketplace, " + nombre + "!", Toast.LENGTH_LONG).show();
             finish();
         } else {
             Toast.makeText(this, "Error: El email ya está registrado", Toast.LENGTH_LONG).show();

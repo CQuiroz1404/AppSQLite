@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AppConSQLite" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- FORZAR MODO CLARO - No usar tema oscuro aunque el dispositivo esté en modo oscuro -->
+    <style name="Base.Theme.AppConSQLite" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Aplicar fuente personalizada en toda la app -->
+        <item name="android:fontFamily">@font/roland_variable_full</item>
+        <item name="fontFamily">@font/roland_variable_full</item>
+        <!-- Forzar que siempre use modo claro -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 </resources>

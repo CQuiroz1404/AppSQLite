@@ -32,6 +32,31 @@ public class ProductRepository {
     }
 
     // ==========================================================
+    // 🔹 Actualizar producto existente
+    // ==========================================================
+    public boolean actualizarProducto(long productId, String nombre, String descripcion, double precio, String imagenPath) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(ProductContract.ProductEntry.COLUMN_NAME, nombre);
+        values.put(ProductContract.ProductEntry.COLUMN_DESC, descripcion);
+        values.put(ProductContract.ProductEntry.COLUMN_PRICE, precio);
+        if (imagenPath != null && !imagenPath.isEmpty()) {
+            values.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, imagenPath);
+        }
+
+        int rows = db.update(
+                ProductContract.ProductEntry.TABLE_NAME,
+                values,
+                ProductContract.ProductEntry._ID + "=?",
+                new String[]{ String.valueOf(productId) }
+        );
+        db.close();
+
+        return rows > 0;
+    }
+
+    // ==========================================================
     // 🔹 Obtener todos los productos
     // ==========================================================
     public Cursor obtenerTodosLosProductos() {
@@ -55,6 +80,35 @@ public class ProductRepository {
     }
 
     // ==========================================================
+    // 🔹 Obtener un producto específico por ID
+    // ==========================================================
+    public Cursor obtenerProductoPorId(long productId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                ProductContract.ProductEntry._ID,
+                ProductContract.ProductEntry.COLUMN_NAME,
+                ProductContract.ProductEntry.COLUMN_DESC,
+                ProductContract.ProductEntry.COLUMN_PRICE,
+                ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
+                ProductContract.ProductEntry.COLUMN_USER_ID
+        };
+
+        String selection = ProductContract.ProductEntry._ID + "=?";
+        String[] selectionArgs = { String.valueOf(productId) };
+
+        return db.query(
+                ProductContract.ProductEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    // ==========================================================
     // 🔹 Obtener productos por usuario específico
     // ==========================================================
     public Cursor obtenerProductosPorUsuario(long userId) {
@@ -65,7 +119,8 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_NAME,
                 ProductContract.ProductEntry.COLUMN_DESC,
                 ProductContract.ProductEntry.COLUMN_PRICE,
-                ProductContract.ProductEntry.COLUMN_IMAGE_PATH
+                ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
+                ProductContract.ProductEntry.COLUMN_USER_ID
         };
 
         String selection = ProductContract.ProductEntry.COLUMN_USER_ID + "=?";
@@ -94,5 +149,33 @@ public class ProductRepository {
         );
         db.close();
         return filas > 0;
+    }
+
+    // ==========================================================
+    // 🔹 Verificar si el usuario es dueño del producto
+    // ==========================================================
+    public boolean esProductoDelUsuario(long productId, long userId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = { ProductContract.ProductEntry._ID };
+        String selection = ProductContract.ProductEntry._ID + "=? AND " +
+                          ProductContract.ProductEntry.COLUMN_USER_ID + "=?";
+        String[] selectionArgs = { String.valueOf(productId), String.valueOf(userId) };
+
+        Cursor cursor = db.query(
+                ProductContract.ProductEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        boolean esDelUsuario = cursor.moveToFirst();
+        cursor.close();
+        db.close();
+
+        return esDelUsuario;
     }
 }

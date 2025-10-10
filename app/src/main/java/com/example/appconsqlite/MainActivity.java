@@ -4,50 +4,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.io.File;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editEmail, editPassword;
+    private TextInputEditText editEmail, editPassword;
+    private TextInputLayout tilEmail, tilPassword;
     private Button btnLogin, btnRegister;
     private UserRepository userRepo;
 
     // Constantes para SharedPreferences
     private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
     private static final String IS_LOGGED_IN = "isLoggedIn";
-    private static final String USER_ID = "userId"; // ¡Nueva clave para guardar el ID!
+    private static final String USER_ID = "userId";
+    private static final String USER_EMAIL = "userEmail";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // FORZAR MODO CLARO - Desactivar modo oscuro
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
 
-        // ===============================================
-        // LÓGICA DE PERSISTENCIA DE SESIÓN: Comprobar estado
-        // ===============================================
         SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
         boolean isLoggedIn = sharedPref.getBoolean(IS_LOGGED_IN, false);
 
         if (isLoggedIn) {
-            // Si ya está logeado, ir directamente al menú
-            // No necesitamos el ID aquí, solo comprobamos si la sesión está activa.
             Intent intent = new Intent(MainActivity.this, Menu.class);
             startActivity(intent);
             finish();
             return;
         }
-        // ===============================================
 
-        // ... (Se mantiene la configuración inicial de la vista) ...
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -58,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Inicializar vistas
+        tilEmail = findViewById(R.id.tilEmail);
         editEmail = findViewById(R.id.editEmail);
+        tilPassword = findViewById(R.id.tilPassword);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
@@ -66,44 +69,67 @@ public class MainActivity extends AppCompatActivity {
         // Inicializar repositorio
         userRepo = new UserRepository(this);
 
+        // DEBUG: Long-click en el logo para limpiar preferencias guardadas (solo para desarrollo)
+        findViewById(R.id.ivLogo).setOnLongClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.clear();
+            editor.apply();
+            Toast.makeText(this, "Preferencias borradas. Puedes hacer pruebas nuevamente.", Toast.LENGTH_LONG).show();
+            return true;
+        });
+
         // Acción de login
         btnLogin.setOnClickListener(v -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            // Resetear errores
+            tilEmail.setError(null);
+            tilPassword.setError(null);
+
+            boolean isValid = true;
+
+            if (TextUtils.isEmpty(email)) {
+                tilEmail.setError("El email no puede estar vacío");
+                isValid = false;
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                tilEmail.setError("Formato de email inválido");
+                isValid = false;
+            }
+
+            if (TextUtils.isEmpty(password)) {
+                tilPassword.setError("La contraseña no puede estar vacía");
+                isValid = false;
+            }
+
+            if (!isValid) {
                 return;
             }
 
-            // Lógica de login: NO CAMBIA
+            // Lógica de login con BCrypt
             boolean logeado = userRepo.loginUsuario(email, password);
             if (logeado) {
-                Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "¡Bienvenido al Marketplace!", Toast.LENGTH_SHORT).show();
 
-                // 1. Obtener el ID del usuario recién logeado
                 long userId = userRepo.obtenerUserId(email);
 
                 if (userId != -1) {
-                    // 2. GUARDAR ESTADO DE SESIÓN Y EL ID DEL USUARIO
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean(IS_LOGGED_IN, true);
-                    editor.putLong(USER_ID, userId); // ¡Guardamos el ID!
+                    editor.putLong(USER_ID, userId);
+                    editor.putString(USER_EMAIL, email);
                     editor.apply();
 
-                    // Abrir Menu Activity
                     Intent intent = new Intent(MainActivity.this, Menu.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    // Esto no debería pasar si el login fue exitoso, pero es buena práctica.
-                    Toast.makeText(this, "Error al obtener ID de usuario.", Toast.LENGTH_LONG).show();
+                    tilEmail.setError("Error al obtener datos de usuario");
                 }
             } else {
-                Toast.makeText(this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
+                tilPassword.setError("Email o contraseña incorrectos");
             }
         });
-
 
         // Acción de abrir Activity de registro
         btnRegister.setOnClickListener(v -> {

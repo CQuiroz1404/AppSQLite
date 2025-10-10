@@ -13,14 +13,15 @@ import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import android.graphics.BitmapFactory; // NUEVA: Para cargar imágenes desde rutas de archivo
-import java.io.File; // NUEVA: Para verificar si la ruta es un archivo
+import android.graphics.BitmapFactory;
+import java.io.File;
 
 public class Perfil extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class Perfil extends AppCompatActivity {
     private CircleImageView ivProfilePicture;
     private TextView tvUserName;
 
-    // Vistas para la información de contacto (NUEVAS)
+    // Vistas para la información de contacto
     private TextView tvUserEmail;
     private TextView tvUserPhone;
     private TextView tvUserAddress;
@@ -41,10 +42,13 @@ public class Perfil extends AppCompatActivity {
 
     // Vistas del menú de opciones
     private LinearLayout llAjustes;
-
+    private LinearLayout llEditarPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // FORZAR MODO CLARO
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil);
@@ -67,6 +71,7 @@ public class Perfil extends AppCompatActivity {
 
         // 2. Inicializar los contenedores de las opciones de menú
         llAjustes = findViewById(R.id.llAjustes);
+        llEditarPerfil = findViewById(R.id.llEditarPerfil);
 
         setupMenuListeners();
 
@@ -163,7 +168,6 @@ public class Perfil extends AppCompatActivity {
                     }
                     // ==========================================================
 
-
                 } catch (IllegalArgumentException e) {
                     Toast.makeText(this, "Error al leer columnas: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 } finally {
@@ -186,5 +190,17 @@ public class Perfil extends AppCompatActivity {
         llAjustes.setOnClickListener(v ->
                 Toast.makeText(this, "Navegando a Ajustes", Toast.LENGTH_SHORT).show()
         );
+
+        llEditarPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(Perfil.this, EditarPerfilActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recargar datos cuando volvemos de editar
+        loadUserData();
     }
 }

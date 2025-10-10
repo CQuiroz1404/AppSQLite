@@ -7,9 +7,9 @@
     android:fillViewport="true">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <!-- Header con gradiente -->
         <LinearLayout
@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Agregar Producto"
+                android:text="✏️ Editar Producto"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Completa la información del producto"
+                android:text="Modifica la información del producto"
                 android:textSize="14sp"
                 android:textColor="#FFEBEE"
                 android:fontFamily="@font/roland_variable_full"
@@ -70,8 +70,8 @@
                     android:layout_marginBottom="12dp"/>
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_gravity="center_horizontal"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
@@ -82,7 +82,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_launcher_background"
                         android:background="@color/background_card"
                         android:contentDescription="Imagen del producto"/>
                 </androidx.cardview.widget.CardView>
@@ -92,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Seleccionar Imagen"
+                    android:text="Cambiar Imagen"
                     android:textColor="@color/white"
                     android:fontFamily="@font/roland_variable_full"
                     android:backgroundTint="@color/red_primary"
@@ -114,7 +113,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Título del producto"
+                    android:hint="Nombre del Producto *"
                     app:boxStrokeColor="@color/red_primary"
                     app:hintTextColor="@color/red_primary"
                     app:boxCornerRadiusTopStart="12dp"
@@ -161,7 +160,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Precio (CLP - Pesos Chilenos)"
+                    android:hint="Precio * ($)"
                     app:boxStrokeColor="@color/red_primary"
                     app:hintTextColor="@color/red_primary"
                     app:prefixText="$ "
@@ -176,22 +175,36 @@
                         android:id="@+id/etPrecioProducto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:textColor="@color/text_primary"
                         android:fontFamily="@font/roland_variable_full"
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Botón de subir -->
+                <!-- Botones de acción -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSubirProducto"
+                    android:id="@+id/btnActualizarProducto"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Subir Producto"
+                    android:text="Actualizar Producto"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:backgroundTint="@color/red_primary"
+                    android:backgroundTint="@color/success_green"
+                    android:fontFamily="@font/roland_variable_full"
+                    app:cornerRadius="28dp"
+                    app:elevation="6dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEliminarProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Eliminar Producto"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:backgroundTint="@color/error_red"
                     android:fontFamily="@font/roland_variable_full"
                     app:cornerRadius="28dp"
                     app:elevation="6dp"/>

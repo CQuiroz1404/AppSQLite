@@ -1,4 +1,16 @@
 <resources>
-    <string name="app_name">AppConSQLite</string>
+    <string name="app_name">Marketplace</string>
     <string name="full_name_format">%1$s %2$s</string>
+    <string name="subtitle_marketplace">Compra y vende productos</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="btn_register">Crear Cuenta</string>
+    <string name="no_account">¿No tienes cuenta?</string>
+
+    <!-- Strings adicionales para activity_main -->
+    <string name="login_button">Ingresar</string>
+    <string name="register_button">Crear Cuenta</string>
+    <string name="no_account_text">¿No tienes cuenta?</string>
 </resources>

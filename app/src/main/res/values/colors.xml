@@ -3,4 +3,29 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_icon">#D00000</color>
+
+    <!-- Paleta de colores rojo -->
+    <color name="red_primary">#D32F2F</color>
+    <color name="red_dark">#B71C1C</color>
+    <color name="red_light">#EF5350</color>
+    <color name="red_accent">#FF1744</color>
+
+    <!-- Colores de fondo -->
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_light_gray">#F5F5F5</color>
+    <color name="background_card">#FAFAFA</color>
+
+    <!-- Colores de texto -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+
+    <!-- Colores de separadores y bordes -->
+    <color name="divider">#E0E0E0</color>
+    <color name="border_light">#EEEEEE</color>
+
+    <!-- Colores de estado -->
+    <color name="success_green">#4CAF50</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="error_red">#F44336</color>
 </resources>
