@@ -5,12 +5,14 @@
     android:background="#FFFFFF"
     android:padding="24dp">
 
+    <!-- Contenedor principal -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
+        <!-- Campo de texto para que el usuario ingrese nombre del producto-->
         <EditText
             android:id="@+id/etNombreProducto"
             android:layout_width="match_parent"
@@ -24,6 +26,7 @@
             android:textColorHint="#757575"
             android:textSize="16sp"/>
 
+        <!-- Campo de texto para la descripcion del producto -->
         <EditText
             android:id="@+id/etDescripcionProducto"
             android:layout_width="match_parent"
@@ -38,6 +41,7 @@
             android:textColorHint="#757575"
             android:textSize="16sp"/>
 
+        <!-- Campo de texto para el precio del producto -->
         <EditText
             android:id="@+id/etPrecioProducto"
             android:layout_width="match_parent"
@@ -50,7 +54,7 @@
             android:textColor="#212121"
             android:textColorHint="#757575"
             android:textSize="16sp"/>
-
+        <!-- Vista de la imagen seleccionada -->
         <ImageView
             android:id="@+id/ivImagenProducto"
             android:layout_width="150dp"
@@ -62,6 +66,7 @@
             android:padding="4dp"
             android:contentDescription="Imagen del producto"/>
 
+        <!-- Boton para poder seleccionar una imagen -->
         <Button
             android:id="@+id/btnSeleccionarImagen"
             android:layout_width="wrap_content"
@@ -73,6 +78,7 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="12dp"/>
 
+        <!-- Boton para subir datos del producto -->
         <Button
             android:id="@+id/btnSubirProducto"
             android:layout_width="match_parent"
