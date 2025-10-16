@@ -11,5 +11,6 @@ public class ProductContract {
         public static final String COLUMN_PRICE = "precio";
         public static final String COLUMN_IMAGE_PATH = "imagen";
         public static final String COLUMN_USER_ID = "usuario_id";
+        public static final String COLUMN_QUANTITY = "cantidad";
     }
 }
