@@ -205,14 +205,17 @@
                         android:id="@+id/btnDisminuirCantidad"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:text="-"
-                        android:textSize="20sp"
+                        android:backgroundTint="@color/red_primary"
                         app:cornerRadius="24dp"
+                        app:icon="@drawable/ic_remove"
+                        app:iconTint="@color/white"
+                        app:iconPadding="0dp"
                         android:insetLeft="0dp"
                         android:insetTop="0dp"
                         android:insetRight="0dp"
                         android:insetBottom="0dp"
-                        android:backgroundTint="@color/red_primary"/>
+                        app:iconGravity="textStart"
+                        />
 
                     <TextView
                         android:id="@+id/tvCantidadProducto"
@@ -229,14 +232,17 @@
                         android:id="@+id/btnAumentarCantidad"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:text="+"
-                        android:textSize="20sp"
+                        android:backgroundTint="@color/red_primary"
                         app:cornerRadius="24dp"
+                        app:icon="@drawable/ic_add"
+                        app:iconTint="@color/white"
+                        app:iconPadding="0dp"
                         android:insetLeft="0dp"
                         android:insetTop="0dp"
                         android:insetRight="0dp"
                         android:insetBottom="0dp"
-                        android:backgroundTint="@color/red_primary"/>
+                        app:iconGravity="textStart"
+                        />
                 </LinearLayout>
 
                 <!-- Botón de subir -->
