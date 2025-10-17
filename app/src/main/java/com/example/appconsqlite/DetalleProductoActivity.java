@@ -24,7 +24,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     private static final String USER_ID = "userId";
 
     private ImageView ivProductoDetalle;
-    private TextView tvNombreDetalle, tvDescripcionDetalle, tvPrecioDetalle, tvVendedorInfo;
+    private TextView tvNombreDetalle, tvDescripcionDetalle, tvPrecioDetalle, tvVendedorInfo, tvCantidadDetalle;
     private Button btnEditar, btnEliminar, btnVolver;
 
     private ProductRepository productRepo;
@@ -44,6 +44,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvDescripcionDetalle = findViewById(R.id.tvDescripcionDetalle);
         tvPrecioDetalle = findViewById(R.id.tvPrecioDetalle);
         tvVendedorInfo = findViewById(R.id.tvVendedorInfo);
+        tvCantidadDetalle = findViewById(R.id.tvCantidadDetalle);
         btnEditar = findViewById(R.id.btnEditarDetalle);
         btnEliminar = findViewById(R.id.btnEliminarDetalle);
         btnVolver = findViewById(R.id.btnVolverDetalle);
@@ -82,11 +83,12 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
         if (cursor != null && cursor.moveToFirst()) {
             try {
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
-                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"));
-                String imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen"));
-                long productUserId = cursor.getLong(cursor.getColumnIndexOrThrow("usuario_id"));
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_NAME));
+                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_DESC));
+                double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_PRICE));
+                int cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_QUANTITY));
+                String imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_IMAGE_PATH));
+                long productUserId = cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_USER_ID));
 
                 // Verificar si es mi producto
                 esMiProducto = (productUserId == currentUserId);
@@ -96,6 +98,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
                 tvDescripcionDetalle.setText(descripcion != null && !descripcion.isEmpty() ?
                     descripcion : "Sin descripción disponible");
                 tvPrecioDetalle.setText("$" + formatearPrecioChileno(precio));
+                tvCantidadDetalle.setText(String.valueOf(cantidad));
 
                 // Mostrar info del vendedor
                 if (esMiProducto) {
@@ -147,7 +150,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     Cursor cursor = productRepo.obtenerProductoPorId(productId);
                     String imagePath = null;
                     if (cursor != null && cursor.moveToFirst()) {
-                        imagePath = cursor.getString(cursor.getColumnIndexOrThrow("imagen"));
+                        imagePath = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_IMAGE_PATH));
                         cursor.close();
                     }
 
