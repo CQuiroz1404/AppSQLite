@@ -1,6 +1,7 @@
 package com.example.appconsqlite;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -9,12 +10,13 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView; // <--- IMPORT NUEVO
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
 
@@ -24,7 +26,11 @@ public class EditarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
-    Button btnActualizar, btnSeleccionarImagen, btnEliminar;
+    // --- INICIO DE CÓDIGO NUEVO ---
+    Button btnActualizar, btnSeleccionarImagen, btnEliminar, btnDisminuirCantidad, btnAumentarCantidad;
+    TextView tvCantidadProducto;
+    private int cantidad = 1; // Variable para almacenar la cantidad
+    // --- FIN DE CÓDIGO NUEVO ---
 
     Uri imagenUri = null;
     String imagenPath = "";
@@ -47,13 +53,18 @@ public class EditarProductoActivity extends AppCompatActivity {
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
         btnEliminar = findViewById(R.id.btnEliminarProducto);
 
+        // --- INICIO DE CÓDIGO NUEVO ---
+        // Inicialización de nuevas vistas para la cantidad
+        btnDisminuirCantidad = findViewById(R.id.btnDisminuirCantidad);
+        btnAumentarCantidad = findViewById(R.id.btnAumentarCantidad);
+        tvCantidadProducto = findViewById(R.id.tvCantidadProducto);
+        // --- FIN DE CÓDIGO NUEVO ---
+
         productRepo = new ProductRepository(this);
 
-        // Obtener userId de SharedPreferences
         SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
         userId = sharedPref.getLong(USER_ID, -1);
 
-        // Obtener productId del Intent
         productId = getIntent().getLongExtra("PRODUCT_ID", -1);
 
         if (productId == -1) {
@@ -62,53 +73,71 @@ public class EditarProductoActivity extends AppCompatActivity {
             return;
         }
 
-        // Verificar que el usuario sea dueño del producto
         if (!productRepo.esProductoDelUsuario(productId, userId)) {
             Toast.makeText(this, "No tienes permiso para editar este producto", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
-        // Configurar launcher de galería
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         imagenUri = result.getData().getData();
                         if (imagenUri != null) {
                             ivImagen.setImageURI(imagenUri);
-                            imagenPath = imagenUri.toString();
+                            // No asignamos imagenPath aquí, se hará al guardar
                         }
                     }
                 });
 
-        // Cargar datos del producto
         cargarDatosProducto();
 
         btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
         btnActualizar.setOnClickListener(v -> actualizarProducto());
         btnEliminar.setOnClickListener(v -> eliminarProducto());
+
+        // --- INICIO DE CÓDIGO NUEVO ---
+        // Listeners para los botones de cantidad
+        btnAumentarCantidad.setOnClickListener(v -> {
+            cantidad++;
+            tvCantidadProducto.setText(String.valueOf(cantidad));
+        });
+
+        btnDisminuirCantidad.setOnClickListener(v -> {
+            if (cantidad > 1) { // Evitar que la cantidad sea menor que 1
+                cantidad--;
+                tvCantidadProducto.setText(String.valueOf(cantidad));
+            }
+        });
+        // --- FIN DE CÓDIGO NUEVO ---
     }
 
     private void cargarDatosProducto() {
         Cursor cursor = productRepo.obtenerProductoPorId(productId);
         if (cursor != null && cursor.moveToFirst()) {
-            String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-            String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
-            double precio = cursor.getDouble(cursor.getColumnIndexOrThrow("precio"));
-            imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen"));
+            String nombre = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_NAME));
+            String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_DESC));
+            double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_PRICE));
+            imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_IMAGE_PATH));
+            // --- INICIO DE CÓDIGO NUEVO ---
+            // Cargar la cantidad desde la base de datos
+            cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_QUANTITY));
+            // --- FIN DE CÓDIGO NUEVO ---
+
 
             etNombre.setText(nombre);
             etDescripcion.setText(descripcion);
             etPrecio.setText(String.valueOf(precio));
+            // --- INICIO DE CÓDIGO NUEVO ---
+            // Mostrar la cantidad cargada
+            tvCantidadProducto.setText(String.valueOf(cantidad));
+            // --- FIN DE CÓDIGO NUEVO ---
 
-            // Cargar imagen si existe
+
             if (imagenPath != null && !imagenPath.isEmpty()) {
                 File imgFile = new File(imagenPath);
                 if (imgFile.exists()) {
                     ivImagen.setImageURI(Uri.fromFile(imgFile));
-                } else {
-                    // Si es una URI
-                    ivImagen.setImageURI(Uri.parse(imagenPath));
                 }
             }
 
@@ -138,30 +167,32 @@ public class EditarProductoActivity extends AppCompatActivity {
         double precio;
         try {
             precio = Double.parseDouble(precioStr);
+            if (precio <= 0) {
+                Toast.makeText(this, "El precio debe ser mayor a $0", Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Precio inválido", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Si se seleccionó una nueva imagen, guardarla
-        String newImagePath = imagenPath; // Mantener la imagen actual por defecto
+        String newImagePath = imagenPath;
         if (imagenUri != null) {
-            // Guardar la nueva imagen
             newImagePath = ImageHelper.saveImageToInternalStorage(this, imagenUri, nombre);
-
             if (newImagePath != null) {
-                // Si se guardó exitosamente y había una imagen anterior, eliminarla
                 if (imagenPath != null && !imagenPath.isEmpty() && !imagenPath.equals(newImagePath)) {
                     ImageHelper.deleteImage(imagenPath);
                 }
             } else {
-                // Si falló al guardar la nueva imagen, mantener la anterior
                 Toast.makeText(this, "Advertencia: No se pudo actualizar la imagen", Toast.LENGTH_SHORT).show();
                 newImagePath = imagenPath;
             }
         }
 
-        boolean exito = productRepo.actualizarProducto(productId, nombre, descripcion, precio, newImagePath);
+        // --- INICIO DE MODIFICACIÓN ---
+        // Se pasa la variable 'cantidad' al método de actualizar
+        boolean exito = productRepo.actualizarProducto(productId, nombre, descripcion, precio, newImagePath, cantidad);
+        // --- FIN DE MODIFICACIÓN ---
 
         if (exito) {
             Toast.makeText(this, "Producto actualizado correctamente", Toast.LENGTH_SHORT).show();
@@ -172,13 +203,12 @@ public class EditarProductoActivity extends AppCompatActivity {
     }
 
     private void eliminarProducto() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle("Eliminar Producto")
                 .setMessage("¿Estás seguro de que deseas eliminar este producto?")
                 .setPositiveButton("Eliminar", (dialog, which) -> {
                     boolean exito = productRepo.eliminarProducto(productId);
                     if (exito) {
-                        // Eliminar también la imagen del almacenamiento
                         if (imagenPath != null && !imagenPath.isEmpty()) {
                             ImageHelper.deleteImage(imagenPath);
                         }

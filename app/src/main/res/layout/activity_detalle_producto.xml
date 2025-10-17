@@ -85,18 +85,55 @@
                     android:fontFamily="@font/roland_variable_full"
                     android:gravity="start"/>
 
-                <!-- Precio -->
-                <TextView
-                    android:id="@+id/tvPrecioDetalle"
+                <!-- Contenedor para Precio y Cantidad -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="$0.00"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/red_primary"
-                    android:fontFamily="@font/roland_variable_full"
+                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
-                    android:gravity="start"/>
+                    android:gravity="bottom">
+
+                    <!-- Precio -->
+                    <TextView
+                        android:id="@+id/tvPrecioDetalle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="$0.00"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/red_primary"
+                        android:fontFamily="@font/roland_variable_full"
+                        android:gravity="start"/>
+
+
+                    <!-- Cantidad Disponible -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="end">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cantidad disponible"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:fontFamily="@font/roland_variable_full"/>
+
+                        <TextView
+                            android:id="@+id/tvCantidadDetalle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="#212121"
+                            android:fontFamily="@font/roland_variable_full"/>
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <!-- Separador -->
                 <View

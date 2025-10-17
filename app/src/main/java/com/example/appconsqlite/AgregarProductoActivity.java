@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AgregarProductoActivity extends AppCompatActivity {
@@ -22,11 +24,13 @@ public class AgregarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
-    Button btnSubir, btnSeleccionarImagen;
+    Button btnSubir, btnSeleccionarImagen, btnDisminuirCantidad, btnAumentarCantidad;
+    TextView tvCantidadProducto;
 
     Uri imagenUri = null;
     ProductRepository productRepo;
     long userId;
+    private int cantidad = 1; // Variable para almacenar la cantidad
 
     private ActivityResultLauncher<Intent> galleryLauncher;
 
@@ -35,12 +39,20 @@ public class AgregarProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_producto);
 
+        // Inicialización de vistas existentes
         etNombre = findViewById(R.id.etNombreProducto);
         etDescripcion = findViewById(R.id.etDescripcionProducto);
         etPrecio = findViewById(R.id.etPrecioProducto);
         ivImagen = findViewById(R.id.ivImagenProducto);
         btnSubir = findViewById(R.id.btnSubirProducto);
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
+
+
+        // Inicialización de nuevas vistas para la cantidad
+        btnDisminuirCantidad = findViewById(R.id.btnDisminuirCantidad);
+        btnAumentarCantidad = findViewById(R.id.btnAumentarCantidad);
+        tvCantidadProducto = findViewById(R.id.tvCantidadProducto);
+
 
         productRepo = new ProductRepository(this);
 
@@ -65,8 +77,24 @@ public class AgregarProductoActivity extends AppCompatActivity {
                     }
                 });
 
+        // Configuración de listeners de clics
         btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
         btnSubir.setOnClickListener(v -> subirProducto());
+
+
+        // Listeners para los botones de cantidad
+        btnAumentarCantidad.setOnClickListener(v -> {
+            cantidad++;
+            tvCantidadProducto.setText(String.valueOf(cantidad));
+        });
+
+        btnDisminuirCantidad.setOnClickListener(v -> {
+            if (cantidad > 1) { // Evitar que la cantidad sea menor que 1
+                cantidad--;
+                tvCantidadProducto.setText(String.valueOf(cantidad));
+            }
+        });
+
     }
 
     private void abrirGaleria() {
@@ -109,7 +137,9 @@ public class AgregarProductoActivity extends AppCompatActivity {
             }
         }
 
-        boolean exito = productRepo.insertarProducto(nombre, descripcion, precio, userId, imagePath);
+
+        // Ahora usamos la variable 'cantidad' al insertar el producto.
+        boolean exito = productRepo.insertarProducto(nombre, descripcion, precio, userId, imagePath, cantidad);
 
         if (exito) {
             Toast.makeText(this, "Producto publicado en el marketplace", Toast.LENGTH_SHORT).show();

@@ -9,8 +9,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ecommerce.db";
 
-    // Incrementar a versión 4 para forzar recreación con productos de ejemplo
-    private static final int DATABASE_VERSION = 4;
+    // Cambiamos de 4 a 5. Esto forzará la ejecución de onUpgrade().
+    private static final int DATABASE_VERSION = 5;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -18,8 +18,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Crear tabla de usuarios (SENTENCIA MODIFICADA)
-        // Se define aquí para asegurar que se crea antes que la tabla de productos, por la clave foránea.
+        // Crear tabla de usuarios
+        // Se define aquí para asegurar que se crea antes que la tabla de productos.
         final String SQL_CREATE_USERS =
                 "CREATE TABLE " + UserContract.UserEntry.TABLE_NAME + " (" +
                         UserContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -32,15 +32,15 @@ public class DBHelper extends SQLiteOpenHelper {
                         UserContract.UserEntry.COLUMN_DIRECCION + " TEXT," +
                         UserContract.UserEntry.COLUMN_FOTO_PERFIL_PATH + " TEXT)";
 
-        // Crear tabla de productos (VERSIÓN ÚNICA Y CORREGIDA)
-        // Se ha unificado la definición para incluir todas las columnas necesarias.
+        // Se ha añadido la nueva columna para la cantidad.
         final String SQL_CREATE_PRODUCTS =
                 "CREATE TABLE " + ProductContract.ProductEntry.TABLE_NAME + " (" +
                         ProductContract.ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         ProductContract.ProductEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                         ProductContract.ProductEntry.COLUMN_DESC + " TEXT, " +
                         ProductContract.ProductEntry.COLUMN_PRICE + " REAL NOT NULL, " +
-                        ProductContract.ProductEntry.COLUMN_IMAGE_PATH + " TEXT, " + // Columna de imagen que faltaba
+                        ProductContract.ProductEntry.COLUMN_IMAGE_PATH + " TEXT, " +
+                        ProductContract.ProductEntry.COLUMN_QUANTITY + " INTEGER DEFAULT 1, " + // Se añade la columna cantidad
                         ProductContract.ProductEntry.COLUMN_USER_ID + " INTEGER, " +
                         "FOREIGN KEY(" + ProductContract.ProductEntry.COLUMN_USER_ID + ") REFERENCES " +
                         UserContract.UserEntry.TABLE_NAME + "(" + UserContract.UserEntry._ID + "))";
@@ -49,20 +49,21 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_USERS);
         db.execSQL(SQL_CREATE_PRODUCTS);
 
-        // Insertar productos de ejemplo
+        // Insertar productos de ejemplo (también actualizados)
         insertarProductosDeEjemplo(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Método de actualización simple (Borrar y Recrear)
-        // Esto BORRARÁ todos los datos existentes, lo cual es común en desarrollo.
+
+        // Esto BORRARÁ todos los datos existentes.
         db.execSQL("DROP TABLE IF EXISTS " + ProductContract.ProductEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserContract.UserEntry.TABLE_NAME);
         onCreate(db);
     }
 
-    // Insertar 4 productos de ejemplo de equipos informáticos
+
+    // Se añade el campo de cantidad a cada producto.
     private void insertarProductosDeEjemplo(SQLiteDatabase db) {
         // Producto 1: Laptop Gaming (en pesos chilenos)
         ContentValues laptop = new ContentValues();
@@ -71,6 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
         laptop.put(ProductContract.ProductEntry.COLUMN_PRICE, 1099000); // ~1.1 millones CLP
         laptop.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, ""); // Sin imagen
         laptop.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1); // Usuario demo
+        laptop.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 5); // Cantidad de ejemplo
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, laptop);
 
         // Producto 2: Monitor 27" (en pesos chilenos)
@@ -80,6 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
         monitor.put(ProductContract.ProductEntry.COLUMN_PRICE, 349990); // ~350mil CLP
         monitor.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         monitor.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
+        monitor.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 10); // Cantidad de ejemplo
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, monitor);
 
         // Producto 3: Teclado Mecánico (en pesos chilenos)
@@ -89,6 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
         teclado.put(ProductContract.ProductEntry.COLUMN_PRICE, 79990); // ~80mil CLP
         teclado.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         teclado.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
+        teclado.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 20); // Cantidad de ejemplo
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, teclado);
 
         // Producto 4: Mouse Inalámbrico (en pesos chilenos)
@@ -98,6 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
         mouse.put(ProductContract.ProductEntry.COLUMN_PRICE, 89990); // ~90mil CLP
         mouse.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         mouse.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
+        mouse.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 15); // Cantidad de ejemplo
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, mouse);
     }
 }
