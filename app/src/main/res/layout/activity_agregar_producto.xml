@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Agregar Producto"
+                android:text="@string/add_product_title"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Completa la información del producto"
+                android:text="@string/add_product_subtitle"
                 android:textSize="14sp"
                 android:textColor="#FFEBEE"
                 android:fontFamily="@font/roland_variable_full"
@@ -62,7 +62,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Imagen del Producto"
+                    android:text="@string/add_product_image_section_title"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/red_primary"
@@ -84,7 +84,7 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_launcher_background"
                         android:background="@color/background_card"
-                        android:contentDescription="Imagen del producto"/>
+                        android:contentDescription="@string/add_product_image_description"/>
                 </androidx.cardview.widget.CardView>
 
                 <com.google.android.material.button.MaterialButton
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Seleccionar Imagen"
+                    android:text="@string/add_product_select_image_button"
                     android:textColor="@color/white"
                     android:fontFamily="@font/roland_variable_full"
                     android:backgroundTint="@color/red_primary"
@@ -104,7 +104,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Información del Producto"
+                    android:text="@string/add_product_info_section_title"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/red_primary"
@@ -114,7 +114,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Título del producto"
+                    android:hint="@string/add_product_name_hint"
                     app:boxStrokeColor="@color/red_primary"
                     app:hintTextColor="@color/red_primary"
                     app:boxCornerRadiusTopStart="12dp"
@@ -137,7 +137,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripción"
+                    android:hint="@string/add_product_description_hint"
                     app:boxStrokeColor="@color/red_primary"
                     app:hintTextColor="@color/red_primary"
                     app:boxCornerRadiusTopStart="12dp"
@@ -161,10 +161,10 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Precio (CLP - Pesos Chilenos)"
+                    android:hint="@string/add_product_price_hint"
                     app:boxStrokeColor="@color/red_primary"
                     app:hintTextColor="@color/red_primary"
-                    app:prefixText="$ "
+                    app:prefixText="@string/add_product_price_prefix"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
@@ -186,7 +186,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cantidad a Agregar"
+                    android:text="@string/add_product_quantity_section_title"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/red_primary"
@@ -221,7 +221,7 @@
                         android:id="@+id/tvCantidadProducto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="@string/add_product_quantity_placeholder"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary"
@@ -250,7 +250,7 @@
                     android:id="@+id/btnSubirProducto"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Subir Producto"
+                    android:text="@string/add_product_upload_button"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="16sp"

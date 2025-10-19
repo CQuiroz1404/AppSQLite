@@ -30,7 +30,7 @@
             android:id="@+id/tvProfileTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mi Perfil"
+            android:text="@string/profile_title"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@android:color/transparent"
-                android:contentDescription="Foto de Perfil"
+                android:contentDescription="@string/profile_picture_description"
                 android:layout_margin="8dp"
                 app:civ_border_width="3dp"
                 app:civ_border_color="@color/red_primary"/>
@@ -95,7 +95,7 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nombre y Apellido"
+                    android:text="@string/profile_user_name_placeholder"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
@@ -122,7 +122,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Email:"
+                            android:text="@string/profile_email_label"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_primary"
@@ -133,7 +133,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="correo@ejemplo.com"
+                            android:text="@string/profile_email_placeholder"
                             android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:fontFamily="@font/roland_variable_full"/>
@@ -150,7 +150,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Teléfono:"
+                            android:text="@string/profile_phone_label"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_primary"
@@ -161,7 +161,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Teléfono: N/A"
+                            android:text="@string/profile_phone_placeholder"
                             android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:fontFamily="@font/roland_variable_full"/>
@@ -177,7 +177,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Dirección:"
+                            android:text="@string/profile_address_label"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_primary"
@@ -188,7 +188,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Dirección: N/A"
+                            android:text="@string/profile_address_placeholder"
                             android:textSize="15sp"
                             android:textColor="@color/text_secondary"
                             android:fontFamily="@font/roland_variable_full"/>
@@ -235,7 +235,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Ajustes"
+                        android:text="@string/profile_settings_option"
                         android:textSize="16sp"
                         android:textColor="@color/text_primary"
                         android:fontFamily="@font/roland_variable_full"/>
@@ -243,7 +243,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="›"
+                        android:text="@string/profile_navigation_indicator"
                         android:textSize="24sp"
                         android:textColor="@color/text_hint"/>
                 </LinearLayout>
@@ -271,7 +271,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Editar Perfil"
+                        android:text="@string/profile_edit_profile_option"
                         android:textSize="16sp"
                         android:textColor="@color/text_primary"
                         android:fontFamily="@font/roland_variable_full"/>
@@ -279,7 +279,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="›"
+                        android:text="@string/profile_navigation_indicator"
                         android:textSize="24sp"
                         android:textColor="@color/text_hint"/>
                 </LinearLayout>
