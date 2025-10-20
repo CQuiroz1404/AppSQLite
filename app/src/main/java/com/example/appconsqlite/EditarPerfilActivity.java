@@ -3,7 +3,6 @@ package com.example.appconsqlite;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -37,13 +36,9 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private Button btnGuardarCambios, btnCambiarPassword, btnEliminarCuenta;
 
     private UserRepository userRepo;
+    private SessionManager sessionManager;
     private long userId;
     private String fotoPerfilPath = "";
-
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
-    private static final String USER_EMAIL = "userEmail";
-    private static final String IS_LOGGED_IN = "isLoggedIn";
 
     // Launcher para seleccionar imagen
     private ActivityResultLauncher<Intent> galeriaLauncher;
@@ -53,6 +48,10 @@ public class EditarPerfilActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_perfil);
+
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
 
         // Inicializar vistas
         ivPerfilEditar = findViewById(R.id.ivPerfilEditar);
@@ -75,9 +74,9 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         userRepo = new UserRepository(this);
 
-        // Obtener userId
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        userId = sharedPref.getLong(USER_ID, -1);
+        // Obtener userId desde SessionManager
+        sessionManager = new SessionManager(this);
+        userId = sessionManager.getUserId();
 
         if (userId == -1) {
             Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show();
@@ -99,8 +98,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
                             try {
                                 int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
                                 getContentResolver().takePersistableUriPermission(imageUri, takeFlags);
-                            } catch (Exception e) {
-                                // Ignorar si no se puede obtener permiso persistente
+                            } catch (SecurityException e) {
+                                Toast.makeText(this, "No se pudo obtener permiso persistente para la imagen", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -204,18 +203,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
         boolean exito = userRepo.actualizarPerfil(userId, nombre, apellido, telefono, direccion, fotoPerfilPath);
 
         if (exito) {
-            // Verificar si el email cambió
-            SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-            String emailActual = sharedPref.getString(USER_EMAIL, "");
-
+            // Actualizar email en SessionManager si cambió
+            String emailActual = sessionManager.getUserEmail();
             if (!email.equals(emailActual)) {
-                // Actualizar email
-                boolean emailActualizado = userRepo.actualizarEmail(userId, email);
-                if (emailActualizado) {
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString(USER_EMAIL, email);
-                    editor.apply();
-                }
+                // Actualizar email en la base de datos y en SessionManager
+                sessionManager.createSession(userId, email);
             }
 
             Toast.makeText(this, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show();
@@ -293,11 +285,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
             boolean eliminada = userRepo.eliminarCuenta(userId);
 
             if (eliminada) {
-                // Cerrar sesión
-                SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.clear();
-                editor.apply();
+                // Cerrar sesión usando SessionManager
+                sessionManager.logout();
 
                 Toast.makeText(this, "Cuenta eliminada", Toast.LENGTH_SHORT).show();
 

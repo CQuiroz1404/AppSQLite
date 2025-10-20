@@ -1,8 +1,6 @@
 package com.example.appconsqlite;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -25,12 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout tilEmail, tilPassword;
     private Button btnLogin, btnRegister;
     private UserRepository userRepo;
-
-    // Constantes para SharedPreferences
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String IS_LOGGED_IN = "isLoggedIn";
-    private static final String USER_ID = "userId";
-    private static final String USER_EMAIL = "userEmail";
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        boolean isLoggedIn = sharedPref.getBoolean(IS_LOGGED_IN, false);
+        // Inicializar SessionManager con encriptación
+        sessionManager = new SessionManager(this);
 
-        if (isLoggedIn) {
+        // Verificar si ya hay una sesión activa
+        if (sessionManager.isLoggedIn()) {
             Intent intent = new Intent(MainActivity.this, Menu.class);
             startActivity(intent);
             finish();
@@ -51,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -71,10 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         // DEBUG: Long-click en el logo para limpiar preferencias guardadas (solo para desarrollo)
         findViewById(R.id.ivLogo).setOnLongClickListener(v -> {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.clear();
-            editor.apply();
-            Toast.makeText(this, "Preferencias borradas. Puedes hacer pruebas nuevamente.", Toast.LENGTH_LONG).show();
+            sessionManager.clearAll();
+            Toast.makeText(this, "Sesión limpiada. Puedes hacer pruebas nuevamente.", Toast.LENGTH_LONG).show();
             return true;
         });
 
@@ -114,11 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 long userId = userRepo.obtenerUserId(email);
 
                 if (userId != -1) {
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean(IS_LOGGED_IN, true);
-                    editor.putLong(USER_ID, userId);
-                    editor.putString(USER_EMAIL, email);
-                    editor.apply();
+                    // Usar SessionManager para guardar la sesión de forma segura
+                    sessionManager.createSession(userId, email);
 
                     Intent intent = new Intent(MainActivity.this, Menu.class);
                     startActivity(intent);

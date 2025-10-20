@@ -1,4 +1,7 @@
-TRABAJO REALIZADO POR BPAVEZ12 = BENJAMIN PAVEZ, CQUIEROZ1404 = CHRISTIAN QUIROZ Y MSWINDOW87 = VICTOR UGALDE
+TRABAJO REALIZADO POR: 
+- BPAVEZ12 = BENJAMIN PAVEZ
+- CQUIROZ1404 = CRISTHIAN QUIROZ
+- MSWINDOW87 = VICTOR UGALDE
 
 Este es un prototipo de aplicación de comercio electrónico (E-commerce) desarrollado a partir de una versión simplificada de la idea original (Marketplace), con el objetivo de cumplir los requisitos de la evaluación. Para ello, se implementó una interfaz sencilla y una base de datos local para gestionar productos y perfiles de usuario.Por lo que hasta el momento esta es la primera version pero tenemos muchas mas ideas para implementar
 

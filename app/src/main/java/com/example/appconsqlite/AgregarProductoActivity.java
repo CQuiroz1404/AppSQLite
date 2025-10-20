@@ -1,17 +1,12 @@
 package com.example.appconsqlite;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,18 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class AgregarProductoActivity extends AppCompatActivity {
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
-    Button btnSubir, btnSeleccionarImagen, btnDisminuirCantidad, btnAumentarCantidad;
-    TextView tvCantidadProducto;
+    Button btnSubir, btnSeleccionarImagen, btnDisminuirCantidad, btnAumentarCantidad, btnSeleccionarCategoria;
+    TextView tvCantidadProducto, tvCategoriaSeleccionada;
 
     Uri imagenUri = null;
     ProductRepository productRepo;
+    SessionManager sessionManager;
     long userId;
-    private int cantidad = 1; // Variable para almacenar la cantidad
+    private int cantidad = 1;
+    private String categoriaSeleccionada = ProductContract.Categories.OTROS;
 
     private ActivityResultLauncher<Intent> galleryLauncher;
 
@@ -39,26 +34,25 @@ public class AgregarProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_producto);
 
-        // Inicialización de vistas existentes
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
+
         etNombre = findViewById(R.id.etNombreProducto);
         etDescripcion = findViewById(R.id.etDescripcionProducto);
         etPrecio = findViewById(R.id.etPrecioProducto);
         ivImagen = findViewById(R.id.ivImagenProducto);
         btnSubir = findViewById(R.id.btnSubirProducto);
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
-
-
-        // Inicialización de nuevas vistas para la cantidad
         btnDisminuirCantidad = findViewById(R.id.btnDisminuirCantidad);
         btnAumentarCantidad = findViewById(R.id.btnAumentarCantidad);
         tvCantidadProducto = findViewById(R.id.tvCantidadProducto);
-
+        btnSeleccionarCategoria = findViewById(R.id.btnSeleccionarCategoria);
+        tvCategoriaSeleccionada = findViewById(R.id.tvCategoriaSeleccionada);
 
         productRepo = new ProductRepository(this);
-
-        // Obtener el userId desde SharedPreferences
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        userId = sharedPref.getLong(USER_ID, -1);
+        sessionManager = new SessionManager(this);
+        userId = sessionManager.getUserId();
 
         if (userId == -1) {
             Toast.makeText(this, "Error: Sesión no válida", Toast.LENGTH_SHORT).show();
@@ -66,7 +60,8 @@ public class AgregarProductoActivity extends AppCompatActivity {
             return;
         }
 
-        // Configurar launcher de galería
+        tvCategoriaSeleccionada.setText(categoriaSeleccionada);
+
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -77,24 +72,33 @@ public class AgregarProductoActivity extends AppCompatActivity {
                     }
                 });
 
-        // Configuración de listeners de clics
         btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
         btnSubir.setOnClickListener(v -> subirProducto());
+        btnSeleccionarCategoria.setOnClickListener(v -> mostrarSelectorCategoria());
 
-
-        // Listeners para los botones de cantidad
         btnAumentarCantidad.setOnClickListener(v -> {
             cantidad++;
             tvCantidadProducto.setText(String.valueOf(cantidad));
         });
 
         btnDisminuirCantidad.setOnClickListener(v -> {
-            if (cantidad > 1) { // Evitar que la cantidad sea menor que 1
+            if (cantidad > 1) {
                 cantidad--;
                 tvCantidadProducto.setText(String.valueOf(cantidad));
             }
         });
+    }
 
+    private void mostrarSelectorCategoria() {
+        String[] categorias = ProductContract.Categories.getAllCategories();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Seleccionar Categoría")
+                .setItems(categorias, (dialog, which) -> {
+                    categoriaSeleccionada = categorias[which];
+                    tvCategoriaSeleccionada.setText(categoriaSeleccionada);
+                })
+                .show();
     }
 
     private void abrirGaleria() {
@@ -125,7 +129,6 @@ public class AgregarProductoActivity extends AppCompatActivity {
             return;
         }
 
-        // Guardar la imagen de forma permanente usando ImageHelper
         String imagePath = "";
         if (imagenUri != null) {
             Toast.makeText(this, "Guardando imagen...", Toast.LENGTH_SHORT).show();
@@ -133,23 +136,20 @@ public class AgregarProductoActivity extends AppCompatActivity {
 
             if (imagePath == null) {
                 Toast.makeText(this, "Advertencia: No se pudo guardar la imagen", Toast.LENGTH_SHORT).show();
-                imagePath = ""; // Continuar sin imagen
+                imagePath = "";
             }
         }
 
-
-        // Ahora usamos la variable 'cantidad' al insertar el producto.
-        boolean exito = productRepo.insertarProducto(nombre, descripcion, precio, userId, imagePath, cantidad);
+        boolean exito = productRepo.insertarProducto(nombre, descripcion, precio, userId, imagePath, cantidad, categoriaSeleccionada);
 
         if (exito) {
             Toast.makeText(this, "Producto publicado en el marketplace", Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            // Si falló, eliminar la imagen que se guardó
             if (!imagePath.isEmpty()) {
                 ImageHelper.deleteImage(imagePath);
             }
-            Toast.makeText(this, "Error al publicar producto", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al publicar el producto", Toast.LENGTH_SHORT).show();
         }
     }
 }
