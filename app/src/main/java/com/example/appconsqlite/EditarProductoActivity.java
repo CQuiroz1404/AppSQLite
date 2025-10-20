@@ -96,7 +96,7 @@ public class EditarProductoActivity extends AppCompatActivity {
         btnActualizar.setOnClickListener(v -> actualizarProducto());
         btnEliminar.setOnClickListener(v -> eliminarProducto());
 
-        // --- INICIO DE CÓDIGO NUEVO ---
+
         // Listeners para los botones de cantidad
         btnAumentarCantidad.setOnClickListener(v -> {
             cantidad++;
@@ -109,7 +109,7 @@ public class EditarProductoActivity extends AppCompatActivity {
                 tvCantidadProducto.setText(String.valueOf(cantidad));
             }
         });
-        // --- FIN DE CÓDIGO NUEVO ---
+
     }
 
     private void cargarDatosProducto() {
@@ -119,7 +119,7 @@ public class EditarProductoActivity extends AppCompatActivity {
             String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_DESC));
             double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_PRICE));
             imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_IMAGE_PATH));
-            // --- INICIO DE CÓDIGO NUEVO ---
+
             // Cargar la cantidad desde la base de datos
             cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_QUANTITY));
             // --- FIN DE CÓDIGO NUEVO ---
@@ -128,7 +128,7 @@ public class EditarProductoActivity extends AppCompatActivity {
             etNombre.setText(nombre);
             etDescripcion.setText(descripcion);
             etPrecio.setText(String.valueOf(precio));
-            // --- INICIO DE CÓDIGO NUEVO ---
+
             // Mostrar la cantidad cargada
             tvCantidadProducto.setText(String.valueOf(cantidad));
             // --- FIN DE CÓDIGO NUEVO ---
@@ -189,10 +189,10 @@ public class EditarProductoActivity extends AppCompatActivity {
             }
         }
 
-        // --- INICIO DE MODIFICACIÓN ---
+
         // Se pasa la variable 'cantidad' al método de actualizar
         boolean exito = productRepo.actualizarProducto(productId, nombre, descripcion, precio, newImagePath, cantidad);
-        // --- FIN DE MODIFICACIÓN ---
+
 
         if (exito) {
             Toast.makeText(this, "Producto actualizado correctamente", Toast.LENGTH_SHORT).show();

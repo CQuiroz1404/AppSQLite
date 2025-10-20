@@ -129,6 +129,7 @@
                         android:maxLength="50"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Apellido -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilApellido"
                     android:layout_width="match_parent"
@@ -149,6 +150,7 @@
                         android:maxLength="50"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Telefono -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilTelefono"
                     android:layout_width="match_parent"
@@ -170,6 +172,7 @@
                         android:maxLength="15"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Direccion -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilDireccion"
                     android:layout_width="match_parent"
@@ -201,6 +204,7 @@
                     android:fontFamily="@font/roland_variable_full"
                     android:layout_marginBottom="16dp"/>
 
+                <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEmail"
                     android:layout_width="match_parent"
