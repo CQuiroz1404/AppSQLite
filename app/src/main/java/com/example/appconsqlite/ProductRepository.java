@@ -15,8 +15,7 @@ public class ProductRepository {
     // ==========================================================
     // 🔹 Insertar nuevo producto
     // ==========================================================
-    // --- MODIFICADO: Se añade el parámetro cantidad ---
-    public boolean insertarProducto(String nombre, String descripcion, double precio, long userId, String imagenPath, int cantidad) {
+    public boolean insertarProducto(String nombre, String descripcion, double precio, long userId, String imagenPath, int cantidad, String categoria) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -25,8 +24,8 @@ public class ProductRepository {
         values.put(ProductContract.ProductEntry.COLUMN_PRICE, precio);
         values.put(ProductContract.ProductEntry.COLUMN_USER_ID, userId);
         values.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, imagenPath);
-        // --- NUEVO: Se añade la cantidad a los valores ---
         values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, cantidad);
+        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria); // Nueva columna
 
         long result = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);
         db.close();
@@ -37,16 +36,15 @@ public class ProductRepository {
     // ==========================================================
     // 🔹 Actualizar producto existente
     // ==========================================================
-    // --- MODIFICADO: Se añade el parámetro cantidad ---
-    public boolean actualizarProducto(long productId, String nombre, String descripcion, double precio, String imagenPath, int cantidad) {
+    public boolean actualizarProducto(long productId, String nombre, String descripcion, double precio, String imagenPath, int cantidad, String categoria) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(ProductContract.ProductEntry.COLUMN_NAME, nombre);
         values.put(ProductContract.ProductEntry.COLUMN_DESC, descripcion);
         values.put(ProductContract.ProductEntry.COLUMN_PRICE, precio);
-        // --- NUEVO: Se añade la cantidad a los valores de actualización ---
         values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, cantidad);
+        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria); // Nueva columna
 
         if (imagenPath != null && !imagenPath.isEmpty()) {
             values.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, imagenPath);
@@ -76,15 +74,106 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_PRICE,
                 ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
                 ProductContract.ProductEntry.COLUMN_USER_ID,
-                // --- NUEVO: Se añade la columna cantidad a la consulta ---
-                ProductContract.ProductEntry.COLUMN_QUANTITY
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY // Nueva columna
         };
 
         return db.query(
                 ProductContract.ProductEntry.TABLE_NAME,
                 projection,
                 null, null, null, null,
-                ProductContract.ProductEntry._ID + " DESC" // más nuevos primero
+                ProductContract.ProductEntry._ID + " DESC"
+        );
+    }
+
+    // ==========================================================
+    // 🔹 NUEVO: Buscar productos por nombre (similitud)
+    // ==========================================================
+    public Cursor buscarProductosPorNombre(String query) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                ProductContract.ProductEntry._ID,
+                ProductContract.ProductEntry.COLUMN_NAME,
+                ProductContract.ProductEntry.COLUMN_DESC,
+                ProductContract.ProductEntry.COLUMN_PRICE,
+                ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
+                ProductContract.ProductEntry.COLUMN_USER_ID,
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY
+        };
+
+        String selection = ProductContract.ProductEntry.COLUMN_NAME + " LIKE ?";
+        String[] selectionArgs = { "%" + query + "%" };
+
+        return db.query(
+                ProductContract.ProductEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null,
+                ProductContract.ProductEntry._ID + " DESC"
+        );
+    }
+
+    // ==========================================================
+    // 🔹 NUEVO: Filtrar productos por categoría
+    // ==========================================================
+    public Cursor obtenerProductosPorCategoria(String categoria) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                ProductContract.ProductEntry._ID,
+                ProductContract.ProductEntry.COLUMN_NAME,
+                ProductContract.ProductEntry.COLUMN_DESC,
+                ProductContract.ProductEntry.COLUMN_PRICE,
+                ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
+                ProductContract.ProductEntry.COLUMN_USER_ID,
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY
+        };
+
+        String selection = ProductContract.ProductEntry.COLUMN_CATEGORY + "=?";
+        String[] selectionArgs = { categoria };
+
+        return db.query(
+                ProductContract.ProductEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null,
+                ProductContract.ProductEntry._ID + " DESC"
+        );
+    }
+
+    // ==========================================================
+    // 🔹 NUEVO: Buscar y filtrar por nombre Y categoría
+    // ==========================================================
+    public Cursor buscarYFiltrarProductos(String queryNombre, String categoria) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                ProductContract.ProductEntry._ID,
+                ProductContract.ProductEntry.COLUMN_NAME,
+                ProductContract.ProductEntry.COLUMN_DESC,
+                ProductContract.ProductEntry.COLUMN_PRICE,
+                ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
+                ProductContract.ProductEntry.COLUMN_USER_ID,
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY
+        };
+
+        String selection = ProductContract.ProductEntry.COLUMN_NAME + " LIKE ? AND " +
+                          ProductContract.ProductEntry.COLUMN_CATEGORY + "=?";
+        String[] selectionArgs = { "%" + queryNombre + "%", categoria };
+
+        return db.query(
+                ProductContract.ProductEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null, null,
+                ProductContract.ProductEntry._ID + " DESC"
         );
     }
 
@@ -101,8 +190,8 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_PRICE,
                 ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
                 ProductContract.ProductEntry.COLUMN_USER_ID,
-                // --- NUEVO: Se añade la columna cantidad a la consulta ---
-                ProductContract.ProductEntry.COLUMN_QUANTITY
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY // Nueva columna
         };
 
         String selection = ProductContract.ProductEntry._ID + "=?";
@@ -132,8 +221,8 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_PRICE,
                 ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
                 ProductContract.ProductEntry.COLUMN_USER_ID,
-                // --- NUEVO: Se añade la columna cantidad a la consulta ---
-                ProductContract.ProductEntry.COLUMN_QUANTITY
+                ProductContract.ProductEntry.COLUMN_QUANTITY,
+                ProductContract.ProductEntry.COLUMN_CATEGORY
         };
 
         String selection = ProductContract.ProductEntry.COLUMN_USER_ID + "=?";

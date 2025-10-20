@@ -6,6 +6,9 @@
         <item name="fontFamily">@font/roland_variable_full</item>
         <!-- Forzar que siempre use modo claro -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <!-- Color de la barra de estado -->
+        <item name="android:statusBarColor">@color/red_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.AppConSQLite" parent="Base.Theme.AppConSQLite" />
