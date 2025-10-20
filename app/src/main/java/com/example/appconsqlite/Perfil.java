@@ -1,7 +1,5 @@
 package com.example.appconsqlite;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +7,6 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,10 +31,7 @@ public class Perfil extends AppCompatActivity {
     private TextView tvUserPhone;
     private TextView tvUserAddress;
 
-    // Constantes de SharedPreferences (deben coincidir con MainActivity)
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
-
+    private SessionManager sessionManager;
     private UserRepository userRepo;
 
     // Vistas del menú de opciones
@@ -53,13 +47,18 @@ public class Perfil extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil);
 
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Inicializar repositorio
+        // Inicializar SessionManager y repositorio
+        sessionManager = new SessionManager(this);
         userRepo = new UserRepository(this);
 
         // 1. Inicializar las vistas de datos
@@ -83,9 +82,8 @@ public class Perfil extends AppCompatActivity {
      * Carga los datos del usuario logeado desde la base de datos.
      */
     private void loadUserData() {
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        // Obtener el ID del usuario. -1 es el valor por defecto si no se encuentra.
-        long userId = sharedPref.getLong(USER_ID, -1);
+        // Obtener el ID del usuario desde SessionManager
+        long userId = sessionManager.getUserId();
 
         if (userId != -1) {
             Cursor cursor = userRepo.obtenerDatosPerfil(userId);
@@ -150,36 +148,27 @@ public class Perfil extends AppCompatActivity {
                                 } catch (Exception ex) {
                                     // Falla total al cargar la URI. imageLoaded sigue siendo false.
                                 }
-                            } catch (Exception e) {
-                                // URI mal formada o error genérico. imageLoaded sigue siendo false.
                             }
                         }
 
-                        // 3. Manejo de error final y visualización por defecto
+                        // 3. Si nada funcionó, usar imagen por defecto
                         if (!imageLoaded) {
-                            ivProfilePicture.setImageResource(android.R.drawable.ic_menu_camera);
-                            // Este Toast indica que falló la carga por las razones anteriores (archivo movido, URI caducada, etc.)
-                            Toast.makeText(this, "Advertencia: La foto de perfil anterior no se pudo cargar.", Toast.LENGTH_SHORT).show();
+                            ivProfilePicture.setImageResource(R.mipmap.ic_launcher);
                         }
-
                     } else {
-                        // Si no hay foto, usar la imagen por defecto
-                        ivProfilePicture.setImageResource(android.R.drawable.ic_menu_camera);
+                        // Sin foto de perfil guardada
+                        ivProfilePicture.setImageResource(R.mipmap.ic_launcher);
                     }
-                    // ==========================================================
 
-                } catch (IllegalArgumentException e) {
-                    Toast.makeText(this, "Error al leer columnas: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
+                    cursor.close();
                 }
             } else {
-                Toast.makeText(this, "No se encontraron datos para el usuario.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error al cargar datos del perfil", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Error: No se encontró el ID de sesión.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sesión no válida", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 

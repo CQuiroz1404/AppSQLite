@@ -1,16 +1,14 @@
 package com.example.appconsqlite;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView; // <--- IMPORT NUEVO
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,20 +19,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 
 public class EditarProductoActivity extends AppCompatActivity {
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
-    // --- INICIO DE CÓDIGO NUEVO ---
-    Button btnActualizar, btnSeleccionarImagen, btnEliminar, btnDisminuirCantidad, btnAumentarCantidad;
-    TextView tvCantidadProducto;
-    private int cantidad = 1; // Variable para almacenar la cantidad
-    // --- FIN DE CÓDIGO NUEVO ---
+    Button btnActualizar, btnSeleccionarImagen, btnEliminar, btnDisminuirCantidad, btnAumentarCantidad, btnSeleccionarCategoria;
+    TextView tvCantidadProducto, tvCategoriaSeleccionada;
+    private int cantidad = 1;
+    private String categoriaSeleccionada = ProductContract.Categories.OTROS;
 
     Uri imagenUri = null;
     String imagenPath = "";
     ProductRepository productRepo;
+    SessionManager sessionManager;
     long userId;
     long productId;
 
@@ -45,6 +41,10 @@ public class EditarProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_producto);
 
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
+
         etNombre = findViewById(R.id.etNombreProducto);
         etDescripcion = findViewById(R.id.etDescripcionProducto);
         etPrecio = findViewById(R.id.etPrecioProducto);
@@ -52,18 +52,17 @@ public class EditarProductoActivity extends AppCompatActivity {
         btnActualizar = findViewById(R.id.btnActualizarProducto);
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
         btnEliminar = findViewById(R.id.btnEliminarProducto);
-
-        // --- INICIO DE CÓDIGO NUEVO ---
-        // Inicialización de nuevas vistas para la cantidad
         btnDisminuirCantidad = findViewById(R.id.btnDisminuirCantidad);
         btnAumentarCantidad = findViewById(R.id.btnAumentarCantidad);
         tvCantidadProducto = findViewById(R.id.tvCantidadProducto);
-        // --- FIN DE CÓDIGO NUEVO ---
+        btnSeleccionarCategoria = findViewById(R.id.btnSeleccionarCategoria);
+        tvCategoriaSeleccionada = findViewById(R.id.tvCategoriaSeleccionada);
 
         productRepo = new ProductRepository(this);
 
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        userId = sharedPref.getLong(USER_ID, -1);
+        // Obtener userId desde SessionManager
+        sessionManager = new SessionManager(this);
+        userId = sessionManager.getUserId();
 
         productId = getIntent().getLongExtra("PRODUCT_ID", -1);
 
@@ -85,7 +84,6 @@ public class EditarProductoActivity extends AppCompatActivity {
                         imagenUri = result.getData().getData();
                         if (imagenUri != null) {
                             ivImagen.setImageURI(imagenUri);
-                            // No asignamos imagenPath aquí, se hará al guardar
                         }
                     }
                 });
@@ -95,21 +93,31 @@ public class EditarProductoActivity extends AppCompatActivity {
         btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
         btnActualizar.setOnClickListener(v -> actualizarProducto());
         btnEliminar.setOnClickListener(v -> eliminarProducto());
+        btnSeleccionarCategoria.setOnClickListener(v -> mostrarSelectorCategoria());
 
-        // --- INICIO DE CÓDIGO NUEVO ---
-        // Listeners para los botones de cantidad
         btnAumentarCantidad.setOnClickListener(v -> {
             cantidad++;
             tvCantidadProducto.setText(String.valueOf(cantidad));
         });
 
         btnDisminuirCantidad.setOnClickListener(v -> {
-            if (cantidad > 1) { // Evitar que la cantidad sea menor que 1
+            if (cantidad > 1) {
                 cantidad--;
                 tvCantidadProducto.setText(String.valueOf(cantidad));
             }
         });
-        // --- FIN DE CÓDIGO NUEVO ---
+    }
+
+    private void mostrarSelectorCategoria() {
+        String[] categorias = ProductContract.Categories.getAllCategories();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccionar Categoría");
+        builder.setItems(categorias, (dialog, which) -> {
+            categoriaSeleccionada = categorias[which];
+            tvCategoriaSeleccionada.setText(categoriaSeleccionada);
+        });
+        builder.show();
     }
 
     private void cargarDatosProducto() {
@@ -119,20 +127,22 @@ public class EditarProductoActivity extends AppCompatActivity {
             String descripcion = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_DESC));
             double precio = cursor.getDouble(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_PRICE));
             imagenPath = cursor.getString(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_IMAGE_PATH));
-            // --- INICIO DE CÓDIGO NUEVO ---
-            // Cargar la cantidad desde la base de datos
             cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.ProductEntry.COLUMN_QUANTITY));
-            // --- FIN DE CÓDIGO NUEVO ---
+
+            // Cargar categoría
+            int categoriaIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_CATEGORY);
+            if (categoriaIndex != -1 && !cursor.isNull(categoriaIndex)) {
+                categoriaSeleccionada = cursor.getString(categoriaIndex);
+            } else {
+                categoriaSeleccionada = ProductContract.Categories.OTROS;
+            }
 
 
             etNombre.setText(nombre);
             etDescripcion.setText(descripcion);
             etPrecio.setText(String.valueOf(precio));
-            // --- INICIO DE CÓDIGO NUEVO ---
-            // Mostrar la cantidad cargada
             tvCantidadProducto.setText(String.valueOf(cantidad));
-            // --- FIN DE CÓDIGO NUEVO ---
-
+            tvCategoriaSeleccionada.setText(categoriaSeleccionada);
 
             if (imagenPath != null && !imagenPath.isEmpty()) {
                 File imgFile = new File(imagenPath);
@@ -189,10 +199,7 @@ public class EditarProductoActivity extends AppCompatActivity {
             }
         }
 
-        // --- INICIO DE MODIFICACIÓN ---
-        // Se pasa la variable 'cantidad' al método de actualizar
-        boolean exito = productRepo.actualizarProducto(productId, nombre, descripcion, precio, newImagePath, cantidad);
-        // --- FIN DE MODIFICACIÓN ---
+        boolean exito = productRepo.actualizarProducto(productId, nombre, descripcion, precio, newImagePath, cantidad, categoriaSeleccionada);
 
         if (exito) {
             Toast.makeText(this, "Producto actualizado correctamente", Toast.LENGTH_SHORT).show();

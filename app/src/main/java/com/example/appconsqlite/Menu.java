@@ -1,11 +1,11 @@
 package com.example.appconsqlite;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,14 +21,17 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.view.ViewCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
 
 public class Menu extends AppCompatActivity {
-
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String IS_LOGGED_IN = "isLoggedIn";
-    private static final String USER_ID = "userId";
 
     private DrawerLayout drawerLayout;
     private ImageButton btnMenu;
@@ -36,7 +39,14 @@ public class Menu extends AppCompatActivity {
 
     private LinearLayout containerProductos;
     private ProductRepository productRepo;
+    private SessionManager sessionManager;
     private long currentUserId;
+
+    // Nuevos elementos para búsqueda y filtros
+    private TextInputEditText etBuscarProducto;
+    private ChipGroup chipGroupCategorias;
+    private String categoriaActual = null; // null = todas las categorías
+    private String busquedaActual = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +59,26 @@ public class Menu extends AppCompatActivity {
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_menu);
 
+            // Configurar la barra de estado con color rojo
+            getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
+
+            // Inicializar SessionManager
+            sessionManager = new SessionManager(this);
+
+            // Verificar sesión y obtener userId
+            if (!sessionManager.isLoggedIn()) {
+                // Si no hay sesión, redirigir a login
+                Intent intent = new Intent(Menu.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+
+            currentUserId = sessionManager.getUserId();
+
             // Inicializar repositorio
             productRepo = new ProductRepository(this);
-
-            // Obtener userId actual
-            SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-            currentUserId = sharedPref.getLong(USER_ID, -1);
 
             // Inicializar Drawer y botones
             drawerLayout = findViewById(R.id.drawer_layout);
@@ -66,12 +90,22 @@ public class Menu extends AppCompatActivity {
 
             containerProductos = findViewById(R.id.containerProductos);
 
+            // Nuevas vistas para búsqueda y filtros
+            etBuscarProducto = findViewById(R.id.etBuscarProducto);
+            chipGroupCategorias = findViewById(R.id.chipGroupCategorias);
+
             // Verificar que las vistas existen
             if (drawerLayout == null || btnMenu == null || containerProductos == null) {
                 Toast.makeText(this, "Error al cargar la interfaz", Toast.LENGTH_LONG).show();
                 finish();
                 return;
             }
+
+            // Configurar búsqueda en tiempo real
+            configurarBusqueda();
+
+            // Crear chips de categorías
+            crearChipsCategorias();
 
             // Abrir Drawer
             btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
@@ -105,11 +139,8 @@ public class Menu extends AppCompatActivity {
             // Cerrar Sesión
             if (btnNavCerrarSesion != null) {
                 btnNavCerrarSesion.setOnClickListener(v -> {
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean(IS_LOGGED_IN, false);
-                    editor.remove(USER_ID);
-                    editor.apply();
-
+                    // Usar SessionManager para cerrar sesión de forma segura
+                    sessionManager.logout();
                     Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(Menu.this, MainActivity.class);
@@ -143,22 +174,86 @@ public class Menu extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            cargarProductos();
-        } catch (Exception e) {
-            Toast.makeText(this, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+    /**
+     * Configura la búsqueda en tiempo real
+     */
+    private void configurarBusqueda() {
+        etBuscarProducto.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                busquedaActual = s.toString().trim();
+                aplicarFiltros();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    /**
+     * Crea los chips de categorías dinámicamente
+     */
+    private void crearChipsCategorias() {
+        String[] categorias = ProductContract.Categories.getAllCategories();
+
+        for (String categoria : categorias) {
+            Chip chip = new Chip(this);
+            chip.setText(categoria);
+            chip.setCheckable(true);
+            chip.setTextColor(getResources().getColor(android.R.color.white, null));
+            chip.setChipBackgroundColorResource(R.color.chip_background_selector);
+
+            chip.setOnClickListener(v -> {
+                if (chip.isChecked()) {
+                    categoriaActual = categoria;
+                } else {
+                    // Si se deselecciona, seleccionar "Todas"
+                    categoriaActual = null;
+                    Chip chipTodas = findViewById(R.id.chipTodas);
+                    if (chipTodas != null) {
+                        chipTodas.setChecked(true);
+                    }
+                }
+                aplicarFiltros();
+            });
+
+            chipGroupCategorias.addView(chip);
+        }
+
+        // Configurar el chip "Todas"
+        Chip chipTodas = findViewById(R.id.chipTodas);
+        if (chipTodas != null) {
+            chipTodas.setOnClickListener(v -> {
+                if (chipTodas.isChecked()) {
+                    categoriaActual = null;
+                    aplicarFiltros();
+                }
+            });
         }
     }
 
-    private void cargarProductos() {
+    /**
+     * Aplica los filtros de búsqueda y categoría
+     */
+    private void aplicarFiltros() {
         containerProductos.removeAllViews();
 
-        // Título
+        // Título dinámico
         TextView tvTitulo = new TextView(this);
-        tvTitulo.setText("Marketplace - Todos los Productos");
+        String titulo = "Marketplace";
+        if (categoriaActual != null) {
+            titulo += " - " + categoriaActual;
+        }
+        if (!busquedaActual.isEmpty()) {
+            titulo = "Resultados: \"" + busquedaActual + "\"";
+            if (categoriaActual != null) {
+                titulo += " en " + categoriaActual;
+            }
+        }
+        tvTitulo.setText(titulo);
         tvTitulo.setTextSize(20f);
         android.graphics.Typeface typeface = androidx.core.content.res.ResourcesCompat.getFont(this, R.font.roland_variable_full);
         tvTitulo.setTypeface(typeface, android.graphics.Typeface.BOLD);
@@ -166,19 +261,49 @@ public class Menu extends AppCompatActivity {
         tvTitulo.setGravity(Gravity.CENTER);
         containerProductos.addView(tvTitulo);
 
-        Cursor cursor = productRepo.obtenerTodosLosProductos();
+        Cursor cursor = null;
+
+        // Decidir qué consulta ejecutar
+        if (!busquedaActual.isEmpty() && categoriaActual != null) {
+            // Buscar por nombre Y categoría
+            cursor = productRepo.buscarYFiltrarProductos(busquedaActual, categoriaActual);
+        } else if (!busquedaActual.isEmpty()) {
+            // Solo buscar por nombre
+            cursor = productRepo.buscarProductosPorNombre(busquedaActual);
+        } else if (categoriaActual != null) {
+            // Solo filtrar por categoría
+            cursor = productRepo.obtenerProductosPorCategoria(categoriaActual);
+        } else {
+            // Mostrar todos
+            cursor = productRepo.obtenerTodosLosProductos();
+        }
+
         if (cursor != null && cursor.moveToFirst()) {
             // Crear contenedor de productos en grid
             crearGridDeProductos(cursor, false);
             cursor.close();
         } else {
             TextView tvVacio = new TextView(this);
-            tvVacio.setText("No hay productos disponibles en el marketplace.\n¡Sé el primero en publicar!");
+            tvVacio.setText("No se encontraron productos");
             tvVacio.setTextSize(16f);
             tvVacio.setGravity(Gravity.CENTER);
             tvVacio.setPadding(16, 32, 16, 16);
             containerProductos.addView(tvVacio);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            aplicarFiltros(); // Usar filtros en lugar de cargarProductos()
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void cargarProductos() {
+        aplicarFiltros(); // Delegar a aplicarFiltros
     }
 
     private void cargarMisProductos() {

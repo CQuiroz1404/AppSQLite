@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/background_light_gray"
+    android:fitsSystemWindows="true"
     tools:context=".Registro">
 
     <androidx.constraintlayout.widget.ConstraintLayout

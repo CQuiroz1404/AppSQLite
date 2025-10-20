@@ -1,9 +1,7 @@
 package com.example.appconsqlite;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -20,14 +18,12 @@ import java.io.File;
 
 public class DetalleProductoActivity extends AppCompatActivity {
 
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
-
     private ImageView ivProductoDetalle;
     private TextView tvNombreDetalle, tvDescripcionDetalle, tvPrecioDetalle, tvVendedorInfo, tvCantidadDetalle;
     private Button btnEditar, btnEliminar, btnVolver;
 
     private ProductRepository productRepo;
+    private SessionManager sessionManager;
     private long productId;
     private long currentUserId;
     private boolean esMiProducto = false;
@@ -37,6 +33,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_producto);
+
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
 
         // Inicializar vistas
         ivProductoDetalle = findViewById(R.id.ivProductoDetalle);
@@ -51,9 +51,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
         productRepo = new ProductRepository(this);
 
-        // Obtener IDs
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        currentUserId = sharedPref.getLong(USER_ID, -1);
+        // Obtener userId desde SessionManager
+        sessionManager = new SessionManager(this);
+        currentUserId = sessionManager.getUserId();
+
         productId = getIntent().getLongExtra("PRODUCT_ID", -1);
 
         if (productId == -1) {

@@ -9,8 +9,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "ecommerce.db";
 
-    // Cambiamos de 4 a 5. Esto forzará la ejecución de onUpgrade().
-    private static final int DATABASE_VERSION = 5;
+    // Incrementar versión para forzar actualización con categorías
+    private static final int DATABASE_VERSION = 6;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,7 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         UserContract.UserEntry.COLUMN_DIRECCION + " TEXT," +
                         UserContract.UserEntry.COLUMN_FOTO_PERFIL_PATH + " TEXT)";
 
-        // Se ha añadido la nueva columna para la cantidad.
+        // Se ha añadido la columna CATEGORIA
         final String SQL_CREATE_PRODUCTS =
                 "CREATE TABLE " + ProductContract.ProductEntry.TABLE_NAME + " (" +
                         ProductContract.ProductEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -40,7 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         ProductContract.ProductEntry.COLUMN_DESC + " TEXT, " +
                         ProductContract.ProductEntry.COLUMN_PRICE + " REAL NOT NULL, " +
                         ProductContract.ProductEntry.COLUMN_IMAGE_PATH + " TEXT, " +
-                        ProductContract.ProductEntry.COLUMN_QUANTITY + " INTEGER DEFAULT 1, " + // Se añade la columna cantidad
+                        ProductContract.ProductEntry.COLUMN_QUANTITY + " INTEGER DEFAULT 1, " +
+                        ProductContract.ProductEntry.COLUMN_CATEGORY + " TEXT DEFAULT 'Otros', " + // Nueva columna
                         ProductContract.ProductEntry.COLUMN_USER_ID + " INTEGER, " +
                         "FOREIGN KEY(" + ProductContract.ProductEntry.COLUMN_USER_ID + ") REFERENCES " +
                         UserContract.UserEntry.TABLE_NAME + "(" + UserContract.UserEntry._ID + "))";
@@ -73,6 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
         laptop.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, ""); // Sin imagen
         laptop.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1); // Usuario demo
         laptop.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 5); // Cantidad de ejemplo
+        laptop.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, laptop);
 
         // Producto 2: Monitor 27" (en pesos chilenos)
@@ -83,6 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
         monitor.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         monitor.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
         monitor.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 10); // Cantidad de ejemplo
+        monitor.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, monitor);
 
         // Producto 3: Teclado Mecánico (en pesos chilenos)
@@ -93,6 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
         teclado.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         teclado.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
         teclado.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 20); // Cantidad de ejemplo
+        teclado.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, teclado);
 
         // Producto 4: Mouse Inalámbrico (en pesos chilenos)
@@ -103,6 +107,7 @@ public class DBHelper extends SQLiteOpenHelper {
         mouse.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
         mouse.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
         mouse.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 15); // Cantidad de ejemplo
+        mouse.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, mouse);
     }
 }
