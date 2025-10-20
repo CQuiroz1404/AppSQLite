@@ -52,3 +52,6 @@ E-commerce es una aplicacion desarollada en el entorno de android studio y consi
 - DBHelper.java: se almacenan los planos de la base de datos, definen las tablas y columnas
 - UserContract.java: centraliza y estandariza la estructura de la tabla Usuario
 - ProductContract.java: centraliza y estandariza la estructura de la tabla Productos
+
+Pruebas
+Se realizaron las pruebas en un teléfono Google Pixel 6 Pro con la API 31.
