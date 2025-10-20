@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -56,10 +56,10 @@ public class ImageHelper {
                 return null;
             }
 
-            // Redimensionar si es muy grande para ahorrar espacio
-            Bitmap resizedBitmap = resizeImageIfNeeded(originalBitmap, MAX_IMAGE_SIZE);
+            // Redimensionar si es necesario
+            Bitmap resizedBitmap = resizeImage(originalBitmap, MAX_IMAGE_SIZE);
 
-            // Guardar la imagen comprimida en el almacenamiento interno
+            // Guardar la imagen comprimida
             OutputStream outputStream = new FileOutputStream(imageFile);
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
             outputStream.flush();
@@ -81,39 +81,35 @@ public class ImageHelper {
     }
 
     /**
-     * Redimensiona una imagen si supera el tamaño máximo
+     * Redimensiona una imagen si excede el tamaño máximo
      */
-    private static Bitmap resizeImageIfNeeded(Bitmap bitmap, int maxSize) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+    private static Bitmap resizeImage(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
         if (width <= maxSize && height <= maxSize) {
-            return bitmap; // No necesita redimensionarse
+            return image;
         }
 
-        float scale;
-        if (width > height) {
-            scale = (float) maxSize / width;
-        } else {
-            scale = (float) maxSize / height;
-        }
+        float ratio = Math.min(
+            (float) maxSize / width,
+            (float) maxSize / height
+        );
 
-        int newWidth = Math.round(width * scale);
-        int newHeight = Math.round(height * scale);
+        int newWidth = Math.round(width * ratio);
+        int newHeight = Math.round(height * ratio);
 
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+        return Bitmap.createScaledBitmap(image, newWidth, newHeight, true);
     }
 
     /**
-     * Limpia el nombre del archivo para evitar caracteres no válidos
+     * Sanitiza el nombre del archivo eliminando caracteres no válidos
      */
     private static String sanitizeFileName(String name) {
         if (name == null || name.isEmpty()) {
-            return "unnamed";
+            return "image";
         }
-        // Remover caracteres especiales y limitar longitud
-        String sanitized = name.replaceAll("[^a-zA-Z0-9_-]", "_");
-        return sanitized.substring(0, Math.min(sanitized.length(), 30));
+        return name.replaceAll("[^a-zA-Z0-9._-]", "_").substring(0, Math.min(name.length(), 30));
     }
 
     /**
@@ -126,30 +122,13 @@ public class ImageHelper {
             return false;
         }
 
-        try {
-            File imageFile = new File(imagePath);
-            if (imageFile.exists()) {
-                boolean deleted = imageFile.delete();
-                if (deleted) {
-                    Log.d(TAG, "Imagen eliminada: " + imagePath);
-                }
-                return deleted;
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error al eliminar imagen: " + e.getMessage(), e);
+        File imageFile = new File(imagePath);
+        if (imageFile.exists()) {
+            boolean deleted = imageFile.delete();
+            Log.d(TAG, "Imagen eliminada: " + deleted);
+            return deleted;
         }
         return false;
-    }
-
-    /**
-     * Verifica si una imagen existe en la ruta especificada
-     */
-    public static boolean imageExists(String imagePath) {
-        if (imagePath == null || imagePath.isEmpty()) {
-            return false;
-        }
-        File file = new File(imagePath);
-        return file.exists() && file.isFile();
     }
 }
 

@@ -1,9 +1,12 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.data.repository;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.appconsqlite.data.database.DBHelper;
+import com.example.appconsqlite.data.database.ProductContract;
 
 public class ProductRepository {
     private DBHelper dbHelper;
@@ -25,7 +28,7 @@ public class ProductRepository {
         values.put(ProductContract.ProductEntry.COLUMN_USER_ID, userId);
         values.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, imagenPath);
         values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, cantidad);
-        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria); // Nueva columna
+        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria);
 
         long result = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);
         db.close();
@@ -44,7 +47,7 @@ public class ProductRepository {
         values.put(ProductContract.ProductEntry.COLUMN_DESC, descripcion);
         values.put(ProductContract.ProductEntry.COLUMN_PRICE, precio);
         values.put(ProductContract.ProductEntry.COLUMN_QUANTITY, cantidad);
-        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria); // Nueva columna
+        values.put(ProductContract.ProductEntry.COLUMN_CATEGORY, categoria);
 
         if (imagenPath != null && !imagenPath.isEmpty()) {
             values.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, imagenPath);
@@ -75,7 +78,7 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
                 ProductContract.ProductEntry.COLUMN_USER_ID,
                 ProductContract.ProductEntry.COLUMN_QUANTITY,
-                ProductContract.ProductEntry.COLUMN_CATEGORY // Nueva columna
+                ProductContract.ProductEntry.COLUMN_CATEGORY
         };
 
         return db.query(
@@ -191,7 +194,7 @@ public class ProductRepository {
                 ProductContract.ProductEntry.COLUMN_IMAGE_PATH,
                 ProductContract.ProductEntry.COLUMN_USER_ID,
                 ProductContract.ProductEntry.COLUMN_QUANTITY,
-                ProductContract.ProductEntry.COLUMN_CATEGORY // Nueva columna
+                ProductContract.ProductEntry.COLUMN_CATEGORY
         };
 
         String selection = ProductContract.ProductEntry._ID + "=?";
@@ -281,3 +284,4 @@ public class ProductRepository {
         return esDelUsuario;
     }
 }
+

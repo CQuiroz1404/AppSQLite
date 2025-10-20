@@ -18,6 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 
+import com.example.appconsqlite.data.repository.ProductRepository;
+import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.SessionManager;
+import com.example.appconsqlite.utils.ImageHelper;
+
 public class EditarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;

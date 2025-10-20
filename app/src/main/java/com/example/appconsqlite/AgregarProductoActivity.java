@@ -13,6 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appconsqlite.data.repository.ProductRepository;
+import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.SessionManager;
+import com.example.appconsqlite.utils.ImageHelper;
+
 public class AgregarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;

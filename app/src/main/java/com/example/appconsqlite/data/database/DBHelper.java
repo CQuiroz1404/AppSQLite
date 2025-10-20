@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.data.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -98,16 +98,6 @@ public class DBHelper extends SQLiteOpenHelper {
         teclado.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 20); // Cantidad de ejemplo
         teclado.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
         db.insert(ProductContract.ProductEntry.TABLE_NAME, null, teclado);
-
-        // Producto 4: Mouse Inalámbrico (en pesos chilenos)
-        ContentValues mouse = new ContentValues();
-        mouse.put(ProductContract.ProductEntry.COLUMN_NAME, "Mouse Logitech MX Master 3");
-        mouse.put(ProductContract.ProductEntry.COLUMN_DESC, "Mouse inalámbrico ergonómico, sensor de 4000 DPI, batería recargable, compatible con múltiples dispositivos.");
-        mouse.put(ProductContract.ProductEntry.COLUMN_PRICE, 89990); // ~90mil CLP
-        mouse.put(ProductContract.ProductEntry.COLUMN_IMAGE_PATH, "");
-        mouse.put(ProductContract.ProductEntry.COLUMN_USER_ID, 1);
-        mouse.put(ProductContract.ProductEntry.COLUMN_QUANTITY, 15); // Cantidad de ejemplo
-        mouse.put(ProductContract.ProductEntry.COLUMN_CATEGORY, ProductContract.Categories.ELECTRONICA); // Nueva columna
-        db.insert(ProductContract.ProductEntry.TABLE_NAME, null, mouse);
     }
 }
+

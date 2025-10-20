@@ -16,6 +16,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
 
+import com.example.appconsqlite.data.repository.ProductRepository;
+import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.SessionManager;
+import com.example.appconsqlite.utils.ImageHelper;
+
 public class DetalleProductoActivity extends AppCompatActivity {
 
     private ImageView ivProductoDetalle;

@@ -20,6 +20,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import android.graphics.BitmapFactory;
 import java.io.File;
 
+import com.example.appconsqlite.utils.SessionManager;
+import com.example.appconsqlite.data.repository.UserRepository;
+import com.example.appconsqlite.data.database.UserContract;
+
 public class Perfil extends AppCompatActivity {
 
     // Vistas principales para mostrar datos

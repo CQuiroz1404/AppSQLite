@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -38,3 +38,4 @@ public class PasswordHasher {
         return result.verified;
     }
 }
+

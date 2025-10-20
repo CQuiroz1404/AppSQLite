@@ -17,6 +17,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import com.example.appconsqlite.data.repository.UserRepository;
+import com.example.appconsqlite.utils.SessionManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextInputEditText editEmail, editPassword;
