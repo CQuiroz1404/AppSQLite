@@ -31,6 +31,10 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
 
+import com.example.appconsqlite.data.repository.ProductRepository;
+import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.SessionManager;
+
 public class Menu extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;

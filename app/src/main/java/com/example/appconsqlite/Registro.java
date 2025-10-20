@@ -27,8 +27,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream; // IMPORTACIÓN AÑADIDA
-import java.io.FileOutputStream; // IMPORTACIÓN AÑADIDA
+import java.io.InputStream;
+import java.io.FileOutputStream;
+
+import com.example.appconsqlite.data.repository.UserRepository;
 
 public class Registro extends AppCompatActivity {
 

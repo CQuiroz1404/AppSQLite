@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -63,7 +63,7 @@ public class SessionManager {
     }
 
     /**
-     * Cierra la sesión actual y limpia todos los datos.
+     * Cierra la sesión del usuario.
      */
     public void logout() {
         SharedPreferences.Editor editor = preferences.edit();
@@ -72,9 +72,21 @@ public class SessionManager {
     }
 
     /**
-     * Limpia completamente las preferencias (útil para debugging).
+     * Limpia todas las preferencias guardadas (útil para desarrollo/debugging).
      */
     public void clearAll() {
-        preferences.edit().clear().apply();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+    /**
+     * Actualiza el email del usuario en la sesión.
+     * @param newEmail Nuevo email
+     */
+    public void updateEmail(String newEmail) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_USER_EMAIL, newEmail);
+        editor.apply();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.data.database;
 
 import android.provider.BaseColumns;
 
@@ -50,3 +50,4 @@ public class ProductContract {
         }
     }
 }
+

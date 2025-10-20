@@ -1,9 +1,14 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.data.repository;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.appconsqlite.data.database.DBHelper;
+import com.example.appconsqlite.data.database.UserContract;
+import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.PasswordHasher;
 
 public class UserRepository {
     private DBHelper dbHelper;
@@ -229,30 +234,5 @@ public class UserRepository {
         db.close();
 
         return rows > 0;
-    }
-
-    // Verificar si existe un email (para evitar duplicados)
-    public boolean existeEmail(String email) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String[] projection = { UserContract.UserEntry._ID };
-        String selection = UserContract.UserEntry.COLUMN_EMAIL + "=?";
-        String[] selectionArgs = { email };
-
-        Cursor cursor = db.query(
-                UserContract.UserEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        boolean existe = cursor.moveToFirst();
-        cursor.close();
-        db.close();
-
-        return existe;
     }
 }

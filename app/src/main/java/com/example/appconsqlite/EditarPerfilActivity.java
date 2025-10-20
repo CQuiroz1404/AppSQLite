@@ -27,6 +27,10 @@ import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import com.example.appconsqlite.data.repository.UserRepository;
+import com.example.appconsqlite.data.database.UserContract;
+import com.example.appconsqlite.utils.SessionManager;
+
 public class EditarPerfilActivity extends AppCompatActivity {
 
     private CircleImageView ivPerfilEditar;
