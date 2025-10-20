@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Título sobre el gradiente -->
+        <!-- Título de crear cuenta -->
         <TextView
             android:id="@+id/tvRegistroTitle"
             android:layout_width="wrap_content"
@@ -99,6 +99,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
+                    <!-- Boton de seleccionar imagen de perfil -->
                     <ImageButton
                         android:id="@+id/btnSelectProfileImage"
                         android:layout_width="36dp"
@@ -124,6 +125,7 @@
                     android:fontFamily="@font/roland_variable_full"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Nombre -->
                 <EditText
                     android:id="@+id/editNombre"
                     android:layout_width="match_parent"
@@ -137,6 +139,7 @@
                     android:background="@drawable/edittext_bg"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Apellido -->
                 <EditText
                     android:id="@+id/editApellido"
                     android:layout_width="match_parent"
@@ -150,6 +153,7 @@
                     android:background="@drawable/edittext_bg"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Telefono -->
                 <EditText
                     android:id="@+id/editTelefono"
                     android:layout_width="match_parent"
@@ -163,6 +167,7 @@
                     android:background="@drawable/edittext_bg"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Direccion principal -->
                 <EditText
                     android:id="@+id/editDireccion"
                     android:layout_width="match_parent"
@@ -186,6 +191,7 @@
                     android:fontFamily="@font/roland_variable_full"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Email -->
                 <EditText
                     android:id="@+id/editEmail"
                     android:layout_width="match_parent"
@@ -198,6 +204,7 @@
                     android:background="@drawable/edittext_bg"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Password -->
                 <EditText
                     android:id="@+id/editPassword"
                     android:layout_width="match_parent"
@@ -210,6 +217,7 @@
                     android:background="@drawable/edittext_bg"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Confirmar password -->
                 <EditText
                     android:id="@+id/editConfirmPassword"
                     android:layout_width="match_parent"

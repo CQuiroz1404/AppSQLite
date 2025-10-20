@@ -33,6 +33,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
+                <!-- Boton de opciones -->
                 <ImageButton
                     android:id="@+id/btnMenu"
                     android:layout_width="48dp"
@@ -43,6 +44,7 @@
                     app:tint="@android:color/white"
                     android:padding="10dp"/>
 
+                <!-- Texto de Bienvenida -->
                 <TextView
                     android:id="@+id/textTitle"
                     android:layout_width="0dp"
@@ -136,7 +138,7 @@
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
-    <!-- Menú lateral mejorado -->
+    <!-- Menú lateral  -->
     <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="280dp"
@@ -147,7 +149,7 @@
         android:elevation="16dp"
         android:fitsSystemWindows="true">
 
-        <!-- Header del menú con gradiente más compacto -->
+        <!-- Header del menú con gradiente  -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
@@ -180,7 +182,7 @@
             android:layout_height="1dp"
             android:background="@color/divider"/>
 
-        <!-- Opciones del menú mejoradas -->
+        <!-- Opciones del menú -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
