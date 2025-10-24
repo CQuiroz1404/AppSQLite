@@ -8,7 +8,7 @@ Este es un prototipo de aplicación de comercio electrónico (E-commerce) desarr
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # :shopping_cart:Marketplace:shopping_cart: 
-E-commerce es una aplicacion desarollada en el entorno de android studio y consiste en una tienda virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
+E-commerce es una aplicacion desarollada en el entorno de android studio y consiste en un administrador virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
 
 ## 📁 Estructura del Proyecto
 
@@ -52,6 +52,8 @@ E-commerce es una aplicacion desarollada en el entorno de android studio y consi
 - DBHelper.java: se almacenan los planos de la base de datos, definen las tablas y columnas
 - UserContract.java: centraliza y estandariza la estructura de la tabla Usuario
 - ProductContract.java: centraliza y estandariza la estructura de la tabla Productos
-
-## Pruebas
+---------------------------------------------------------------------------------------------
+## 🧪Pruebas
 Se realizaron las pruebas en un teléfono Google Pixel 6 Pro con la API 31.
+
+<img src="https://i.blogs.es/1a2f94/google-pixel-6-pro_1/840_560.jpg" width="800"/>
