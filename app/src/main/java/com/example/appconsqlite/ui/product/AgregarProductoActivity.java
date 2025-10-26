@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.product;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.ProductRepository;
 import com.example.appconsqlite.data.database.ProductContract;
 import com.example.appconsqlite.utils.SessionManager;

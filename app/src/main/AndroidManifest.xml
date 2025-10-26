@@ -22,29 +22,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppConSQLite">
         <activity
-            android:name=".DetalleProductoActivity"
+            android:name=".ui.product.DetalleProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".EditarPerfilActivity"
+            android:name=".ui.profile.EditarPerfilActivity"
             android:exported="false" />
         <activity
-            android:name=".EditarProductoActivity"
+            android:name=".ui.product.EditarProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".AgregarProductoActivity"
+            android:name=".ui.product.AgregarProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".Perfil"
+            android:name=".ui.profile.Perfil"
             android:exported="false" />
         <activity
-            android:name=".Menu"
+            android:name=".ui.main.Menu"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Registro"
+            android:name=".ui.auth.Registro"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.auth.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

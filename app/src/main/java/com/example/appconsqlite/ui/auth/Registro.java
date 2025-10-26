@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.auth;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileOutputStream;
 
+import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.UserRepository;
 
 public class Registro extends AppCompatActivity {

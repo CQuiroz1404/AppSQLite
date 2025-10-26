@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.main;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,10 +21,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.core.view.ViewCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.appconsqlite.ui.product.AgregarProductoActivity;
+import com.example.appconsqlite.ui.product.DetalleProductoActivity;
+import com.example.appconsqlite.ui.profile.Perfil;
+import com.example.appconsqlite.R;
+import com.example.appconsqlite.ui.auth.MainActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;

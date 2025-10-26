@@ -1,10 +1,9 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.product;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
 
+import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.ProductRepository;
 import com.example.appconsqlite.data.database.ProductContract;
 import com.example.appconsqlite.utils.SessionManager;

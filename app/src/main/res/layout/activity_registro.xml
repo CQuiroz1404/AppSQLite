@@ -8,7 +8,7 @@
     android:fillViewport="true"
     android:background="@color/background_light_gray"
     android:fitsSystemWindows="true"
-    tools:context=".Registro">
+    tools:context=".ui.auth.Registro">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"

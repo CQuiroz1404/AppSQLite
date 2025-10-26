@@ -1,6 +1,5 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.product;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 
+import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.ProductRepository;
 import com.example.appconsqlite.data.database.ProductContract;
 import com.example.appconsqlite.utils.SessionManager;

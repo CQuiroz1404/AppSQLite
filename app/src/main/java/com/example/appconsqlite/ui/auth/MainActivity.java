@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.appconsqlite.ui.main.Menu;
+import com.example.appconsqlite.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 

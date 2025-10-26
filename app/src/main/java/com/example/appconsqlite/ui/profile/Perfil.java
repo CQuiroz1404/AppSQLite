@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.profile;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,6 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import android.graphics.BitmapFactory;
 import java.io.File;
 
+import com.example.appconsqlite.R;
 import com.example.appconsqlite.utils.SessionManager;
 import com.example.appconsqlite.data.repository.UserRepository;
 import com.example.appconsqlite.data.database.UserContract;
