@@ -17,7 +17,7 @@
 
     <!-- Strings para activity_menu -->
     <string name="menu_options_description">Menú de Opciones</string>
-    <string name="menu_welcome_title">Bienvenido al E-commerce</string>
+    <string name="menu_welcome_title">Bienvenido al Marketplace</string>
     <string name="menu_logo_description">Logo</string>
     <string name="menu_nav_header_title">Menú de Opciones</string>
     <string name="menu_nav_my_account">Mi Cuenta</string>

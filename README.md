@@ -3,12 +3,12 @@ TRABAJO REALIZADO POR:
 - CQUIROZ1404 = CRISTHIAN QUIROZ
 - MSWINDOW87 = VICTOR UGALDE
 
-Este es un prototipo de aplicación de comercio electrónico (E-commerce) desarrollado a partir de una versión simplificada de la idea original (Marketplace), con el objetivo de cumplir los requisitos de la evaluación. Para ello, se implementó una interfaz sencilla y una base de datos local para gestionar productos y perfiles de usuario.Por lo que hasta el momento esta es la primera version pero tenemos muchas mas ideas para implementar
+Este es un prototipo de aplicación de marketplace desarrollado a partir de una versión simplificada de la idea original (Marketplace), con el objetivo de cumplir los requisitos de la evaluación. Para ello, se implementó una interfaz sencilla y una base de datos local para gestionar productos y perfiles de usuario.Por lo que hasta el momento esta es la primera version pero tenemos muchas mas ideas para implementar
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # :shopping_cart:Marketplace:shopping_cart: 
-E-commerce es una aplicacion desarollada en el entorno de android studio y consiste en un administrador virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
+Marketplace es una aplicacion desarollada en el entorno de android studio y consiste en un administrador virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
 
 ## 📁 Estructura del Proyecto
 
