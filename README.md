@@ -8,7 +8,7 @@ Este es un prototipo de aplicación de comercio electrónico (E-commerce) desarr
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # :shopping_cart:Marketplace:shopping_cart: 
-E-commerce es una aplicacion desarollada en el entorno de android studio y consiste en un administrador virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
+Es una aplicacion desarollada en el entorno de android studio y consiste en un administrador virtual de productos.Esta aplicacion incluye la posibilidad al usuario de crear su perfil y editarlo o personalizarlo a su gusto ademas de poder ver los productos disponibles en la aplicacion y sus detalles,  en el caso de que sea el autor de la publicacion del producto podra editar el producto ya sea la descripcion nombre, foto, cantidad o directamente eliminarlo si desea.
 
 ## 📁 Estructura del Proyecto
 
