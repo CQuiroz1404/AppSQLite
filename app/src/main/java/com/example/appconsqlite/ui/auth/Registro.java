@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -35,7 +37,8 @@ import com.example.appconsqlite.data.repository.UserRepository;
 
 public class Registro extends AppCompatActivity {
 
-    private EditText editNombre, editApellido, editTelefono, editDireccion;
+    private EditText editNombre, editApellido, editDireccion;
+    private TextInputEditText editTelefono;
     private EditText editEmail, editPassword, editConfirmPassword;
     private Button btnRegister;
     private ImageButton btnSelectProfileImage;

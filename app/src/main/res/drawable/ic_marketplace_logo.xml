@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Logo de Marketplace - Tienda con carrito de compras -->
+
+    <!-- Techo de la tienda -->
+    <path
+        android:fillColor="@color/red_primary"
+        android:pathData="M2,8 L12,2 L22,8 L22,10 L2,10 Z"/>
+
+    <!-- Estructura de la tienda -->
+    <path
+        android:fillColor="@color/red_primary"
+        android:pathData="M3,10 L3,20 L10,20 L10,15 L14,15 L14,20 L21,20 L21,10"/>
+
+    <!-- Puerta -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,15 L11,20 L13,20 L13,15 Z"/>
+
+    <!-- Ventanas -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M5,12 L5,14 L8,14 L8,12 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,12 L16,14 L19,14 L19,12 Z"/>
+</vector>
+

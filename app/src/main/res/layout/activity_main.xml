@@ -40,12 +40,11 @@
 
             <ImageView
                 android:id="@+id/ivLogo"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_gallery"
-                android:contentDescription="@string/main_logo_description"
-                app:tint="@color/red_primary" />
+                android:src="@drawable/ic_marketplace_logo"
+                android:contentDescription="@string/main_logo_description" />
 
         </androidx.cardview.widget.CardView>
 
