@@ -2,20 +2,12 @@ package com.example.appconsqlite.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-/**
- * Clase helper para gestionar el hash y verificación de contraseñas usando BCrypt.
- * Actualizado para usar la librería moderna at.favre.lib.bcrypt con mejor rendimiento.
- */
+// Gestiona el hash y verificación segura de contraseñas usando BCrypt
 public class PasswordHasher {
 
-    // Cost factor para BCrypt (12 es un buen balance entre seguridad y rendimiento)
     private static final int BCRYPT_COST = 12;
 
-    /**
-     * Genera un hash seguro de la contraseña usando BCrypt.
-     * @param password Contraseña en texto plano
-     * @return Hash BCrypt de la contraseña
-     */
+    // Genera hash seguro de contraseña usando BCrypt con cost factor 12
     public static String hashPassword(String password) {
         if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("La contraseña no puede estar vacía");
@@ -23,12 +15,7 @@ public class PasswordHasher {
         return BCrypt.withDefaults().hashToString(BCRYPT_COST, password.toCharArray());
     }
 
-    /**
-     * Verifica si una contraseña coincide con un hash BCrypt almacenado.
-     * @param password Contraseña en texto plano a verificar
-     * @param hashedPassword Hash BCrypt almacenado
-     * @return true si la contraseña coincide, false en caso contrario
-     */
+    // Verifica si una contraseña coincide con su hash almacenado
     public static boolean checkPassword(String password, String hashedPassword) {
         if (password == null || hashedPassword == null) {
             return false;

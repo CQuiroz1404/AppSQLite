@@ -11,43 +11,34 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+// Gestiona almacenamiento, redimensionamiento y eliminación de imágenes de productos
 public class ImageHelper {
     private static final String TAG = "ImageHelper";
     private static final String IMAGE_FOLDER = "product_images";
-    private static final int MAX_IMAGE_SIZE = 1024; // Tamaño máximo en píxeles
+    private static final int MAX_IMAGE_SIZE = 1024;
 
-    /**
-     * Copia una imagen desde una URI a la carpeta interna de la app
-     * @param context Contexto de la aplicación
-     * @param imageUri URI de la imagen seleccionada
-     * @param productName Nombre del producto (para nombrar el archivo)
-     * @return Ruta absoluta del archivo guardado, o null si falla
-     */
+    // Copia imagen desde URI a almacenamiento interno y la redimensiona si es necesario
     public static String saveImageToInternalStorage(Context context, Uri imageUri, String productName) {
         if (imageUri == null) {
             return null;
         }
 
         try {
-            // Crear carpeta para imágenes si no existe
             File imageFolder = new File(context.getFilesDir(), IMAGE_FOLDER);
             if (!imageFolder.exists()) {
                 imageFolder.mkdirs();
             }
 
-            // Crear nombre único para el archivo
             String fileName = "product_" + System.currentTimeMillis() + "_" +
                              sanitizeFileName(productName) + ".jpg";
             File imageFile = new File(imageFolder, fileName);
 
-            // Leer la imagen desde la URI
             InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
             if (inputStream == null) {
                 Log.e(TAG, "No se pudo abrir el InputStream de la URI");
                 return null;
             }
 
-            // Decodificar la imagen
             Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
             inputStream.close();
 
@@ -56,16 +47,13 @@ public class ImageHelper {
                 return null;
             }
 
-            // Redimensionar si es necesario
             Bitmap resizedBitmap = resizeImage(originalBitmap, MAX_IMAGE_SIZE);
 
-            // Guardar la imagen comprimida
             OutputStream outputStream = new FileOutputStream(imageFile);
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
             outputStream.flush();
             outputStream.close();
 
-            // Liberar memoria
             if (resizedBitmap != originalBitmap) {
                 originalBitmap.recycle();
             }
@@ -80,9 +68,7 @@ public class ImageHelper {
         }
     }
 
-    /**
-     * Redimensiona una imagen si excede el tamaño máximo
-     */
+    // Redimensiona imagen si excede el tamaño máximo manteniendo proporción
     private static Bitmap resizeImage(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -91,20 +77,14 @@ public class ImageHelper {
             return image;
         }
 
-        float ratio = Math.min(
-            (float) maxSize / width,
-            (float) maxSize / height
-        );
-
+        float ratio = Math.min((float) maxSize / width, (float) maxSize / height);
         int newWidth = Math.round(width * ratio);
         int newHeight = Math.round(height * ratio);
 
         return Bitmap.createScaledBitmap(image, newWidth, newHeight, true);
     }
 
-    /**
-     * Sanitiza el nombre del archivo eliminando caracteres no válidos
-     */
+    // Elimina caracteres no válidos del nombre de archivo
     private static String sanitizeFileName(String name) {
         if (name == null || name.isEmpty()) {
             return "image";
@@ -112,11 +92,7 @@ public class ImageHelper {
         return name.replaceAll("[^a-zA-Z0-9._-]", "_").substring(0, Math.min(name.length(), 30));
     }
 
-    /**
-     * Elimina una imagen del almacenamiento interno
-     * @param imagePath Ruta absoluta de la imagen
-     * @return true si se eliminó correctamente
-     */
+    // Elimina imagen del almacenamiento interno
     public static boolean deleteImage(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
             return false;

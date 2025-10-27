@@ -3,11 +3,7 @@ package com.example.appconsqlite.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Clase para gestionar la sesión del usuario de forma centralizada.
- * Versión simplificada que usa SharedPreferences normales.
- * TODO: Actualizar a EncryptedSharedPreferences cuando se descarguen las dependencias.
- */
+// Gestiona la sesión del usuario usando SharedPreferences
 public class SessionManager {
 
     private static final String PREFS_FILE = "user_session_prefs";
@@ -17,19 +13,11 @@ public class SessionManager {
 
     private final SharedPreferences preferences;
 
-    /**
-     * Constructor que inicializa SharedPreferences.
-     * @param context Contexto de la aplicación
-     */
     public SessionManager(Context context) {
         preferences = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
     }
 
-    /**
-     * Guarda los datos de sesión del usuario.
-     * @param userId ID del usuario
-     * @param email Email del usuario
-     */
+    // Guarda datos de sesión al iniciar sesión
     public void createSession(long userId, String email) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
@@ -38,52 +26,36 @@ public class SessionManager {
         editor.apply();
     }
 
-    /**
-     * Verifica si hay una sesión activa.
-     * @return true si el usuario está logueado
-     */
+    // Verifica si existe sesión activa
     public boolean isLoggedIn() {
         return preferences.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
-    /**
-     * Obtiene el ID del usuario actual.
-     * @return ID del usuario o -1 si no hay sesión
-     */
+    // Retorna ID del usuario actual o -1 si no hay sesión
     public long getUserId() {
         return preferences.getLong(KEY_USER_ID, -1);
     }
 
-    /**
-     * Obtiene el email del usuario actual.
-     * @return Email del usuario o null si no hay sesión
-     */
+    // Retorna email del usuario actual
     public String getUserEmail() {
         return preferences.getString(KEY_USER_EMAIL, null);
     }
 
-    /**
-     * Cierra la sesión del usuario.
-     */
+    // Cierra sesión y limpia preferencias
     public void logout() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
     }
 
-    /**
-     * Limpia todas las preferencias guardadas (útil para desarrollo/debugging).
-     */
+    // Limpia todas las preferencias (útil para debugging)
     public void clearAll() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
     }
 
-    /**
-     * Actualiza el email del usuario en la sesión.
-     * @param newEmail Nuevo email
-     */
+    // Actualiza email en sesión actual
     public void updateEmail(String newEmail) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(KEY_USER_EMAIL, newEmail);
