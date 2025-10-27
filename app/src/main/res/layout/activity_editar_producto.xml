@@ -21,6 +21,18 @@
             android:padding="24dp"
             android:elevation="8dp">
 
+            <!-- Botón de volver atrás -->
+            <ImageButton
+                android:id="@+id/btnVolverEditarProducto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/profile_back_button"
+                android:padding="12dp"
+                app:tint="@android:color/white"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

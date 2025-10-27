@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class AgregarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
+    ImageButton btnVolverAgregarProducto;
     Button btnSubir, btnSeleccionarImagen, btnDisminuirCantidad, btnAumentarCantidad, btnSeleccionarCategoria;
     TextView tvCantidadProducto, tvCategoriaSeleccionada;
 
@@ -48,6 +50,7 @@ public class AgregarProductoActivity extends AppCompatActivity {
         etDescripcion = findViewById(R.id.etDescripcionProducto);
         etPrecio = findViewById(R.id.etPrecioProducto);
         ivImagen = findViewById(R.id.ivImagenProducto);
+        btnVolverAgregarProducto = findViewById(R.id.btnVolverAgregarProducto);
         btnSubir = findViewById(R.id.btnSubirProducto);
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
         btnDisminuirCantidad = findViewById(R.id.btnDisminuirCantidad);
@@ -65,6 +68,9 @@ public class AgregarProductoActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Configurar botón de volver
+        btnVolverAgregarProducto.setOnClickListener(v -> finish());
 
         tvCategoriaSeleccionada.setText(categoriaSeleccionada);
 

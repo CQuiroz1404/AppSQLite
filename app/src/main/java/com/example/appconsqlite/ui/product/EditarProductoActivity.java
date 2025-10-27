@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class EditarProductoActivity extends AppCompatActivity {
 
     EditText etNombre, etDescripcion, etPrecio;
     ImageView ivImagen;
+    ImageButton btnVolverEditarProducto;
     Button btnActualizar, btnSeleccionarImagen, btnEliminar, btnDisminuirCantidad, btnAumentarCantidad, btnSeleccionarCategoria;
     TextView tvCantidadProducto, tvCategoriaSeleccionada;
     private int cantidad = 1;
@@ -54,6 +56,7 @@ public class EditarProductoActivity extends AppCompatActivity {
         etDescripcion = findViewById(R.id.etDescripcionProducto);
         etPrecio = findViewById(R.id.etPrecioProducto);
         ivImagen = findViewById(R.id.ivImagenProducto);
+        btnVolverEditarProducto = findViewById(R.id.btnVolverEditarProducto);
         btnActualizar = findViewById(R.id.btnActualizarProducto);
         btnSeleccionarImagen = findViewById(R.id.btnSeleccionarImagen);
         btnEliminar = findViewById(R.id.btnEliminarProducto);
@@ -76,6 +79,9 @@ public class EditarProductoActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Configurar botón de volver
+        btnVolverEditarProducto.setOnClickListener(v -> finish());
 
         if (!productRepo.esProductoDelUsuario(productId, userId)) {
             Toast.makeText(this, "No tienes permiso para editar este producto", Toast.LENGTH_LONG).show();

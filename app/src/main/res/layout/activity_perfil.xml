@@ -25,6 +25,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Botón de volver atrás -->
+        <ImageButton
+            android:id="@+id/btnVolverPerfil"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_back_button"
+            android:padding="12dp"
+            app:tint="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
         <!-- Título sobre el gradiente -->
         <TextView
             android:id="@+id/tvProfileTitle"
@@ -218,42 +233,6 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <!-- Ajustes -->
-                <LinearLayout
-                    android:id="@+id/llAjustes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingVertical="16dp"
-                    android:paddingHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/profile_settings_option"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:fontFamily="@font/roland_variable_full"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_navigation_indicator"
-                        android:textSize="24sp"
-                        android:textColor="@color/text_hint"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:layout_marginHorizontal="16dp"/>
-
                 <!-- Editar Perfil -->
                 <LinearLayout
                     android:id="@+id/llEditarPerfil"
@@ -282,6 +261,42 @@
                         android:text="@string/profile_navigation_indicator"
                         android:textSize="24sp"
                         android:textColor="@color/text_hint"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <!-- Eliminar Cuenta -->
+                <LinearLayout
+                    android:id="@+id/llEliminarCuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/profile_delete_account_option"
+                        android:textSize="16sp"
+                        android:textColor="@color/red_primary"
+                        android:fontFamily="@font/roland_variable_full"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_navigation_indicator"
+                        android:textSize="24sp"
+                        android:textColor="@color/red_primary"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

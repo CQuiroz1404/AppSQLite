@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
     private ImageView ivProductoDetalle;
     private TextView tvNombreDetalle, tvDescripcionDetalle, tvPrecioDetalle, tvVendedorInfo, tvCantidadDetalle;
+    private ImageButton btnVolverDetalleProducto;
     private Button btnEditar, btnEliminar, btnVolver;
 
     private ProductRepository productRepo;
@@ -50,6 +52,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvPrecioDetalle = findViewById(R.id.tvPrecioDetalle);
         tvVendedorInfo = findViewById(R.id.tvVendedorInfo);
         tvCantidadDetalle = findViewById(R.id.tvCantidadDetalle);
+        btnVolverDetalleProducto = findViewById(R.id.btnVolverDetalleProducto);
         btnEditar = findViewById(R.id.btnEditarDetalle);
         btnEliminar = findViewById(R.id.btnEliminarDetalle);
         btnVolver = findViewById(R.id.btnVolverDetalle);
@@ -72,6 +75,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         cargarProducto();
 
         // Configurar botones
+        btnVolverDetalleProducto.setOnClickListener(v -> finish());
         btnVolver.setOnClickListener(v -> finish());
 
         btnEditar.setOnClickListener(v -> {

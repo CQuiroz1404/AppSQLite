@@ -1,11 +1,13 @@
 package com.example.appconsqlite.ui.profile;
 
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +32,7 @@ public class Perfil extends AppCompatActivity {
     // Vistas principales para mostrar datos
     private CircleImageView ivProfilePicture;
     private TextView tvUserName;
+    private ImageButton btnVolverPerfil;
 
     // Vistas para la información de contacto
     private TextView tvUserEmail;
@@ -40,7 +43,7 @@ public class Perfil extends AppCompatActivity {
     private UserRepository userRepo;
 
     // Vistas del menú de opciones
-    private LinearLayout llAjustes;
+    private LinearLayout llEliminarCuenta;
     private LinearLayout llEditarPerfil;
 
     @Override
@@ -72,10 +75,14 @@ public class Perfil extends AppCompatActivity {
         tvUserEmail = findViewById(R.id.tvUserEmail);
         tvUserPhone = findViewById(R.id.tvUserPhone);
         tvUserAddress = findViewById(R.id.tvUserAddress);
+        btnVolverPerfil = findViewById(R.id.btnVolverPerfil);
 
         // 2. Inicializar los contenedores de las opciones de menú
-        llAjustes = findViewById(R.id.llAjustes);
+        llEliminarCuenta = findViewById(R.id.llEliminarCuenta);
         llEditarPerfil = findViewById(R.id.llEditarPerfil);
+
+        // Configurar botón de volver
+        btnVolverPerfil.setOnClickListener(v -> finish());
 
         setupMenuListeners();
 
@@ -181,14 +188,42 @@ public class Perfil extends AppCompatActivity {
      * Configura los listeners de clic para las opciones del menú de perfil.
      */
     private void setupMenuListeners() {
-        llAjustes.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Ajustes", Toast.LENGTH_SHORT).show()
-        );
+        llEliminarCuenta.setOnClickListener(v -> mostrarDialogEliminarCuenta());
 
         llEditarPerfil.setOnClickListener(v -> {
             Intent intent = new Intent(Perfil.this, EditarPerfilActivity.class);
             startActivity(intent);
         });
+    }
+
+    /**
+     * Muestra un diálogo de confirmación para eliminar la cuenta.
+     */
+    private void mostrarDialogEliminarCuenta() {
+        new AlertDialog.Builder(this)
+                .setTitle("⚠️ Eliminar Cuenta")
+                .setMessage("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y se eliminarán todos tus datos y productos.")
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    long userId = sessionManager.getUserId();
+                    boolean eliminada = userRepo.eliminarCuenta(userId);
+
+                    if (eliminada) {
+                        // Cerrar sesión usando SessionManager
+                        sessionManager.logout();
+
+                        Toast.makeText(this, "Cuenta eliminada exitosamente", Toast.LENGTH_SHORT).show();
+
+                        // Volver al login y limpiar la pila de actividades
+                        Intent intent = new Intent(Perfil.this, com.example.appconsqlite.ui.auth.MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Error al eliminar la cuenta", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     @Override

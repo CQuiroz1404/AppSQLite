@@ -23,10 +23,12 @@
     <string name="menu_nav_my_account">Mi Cuenta</string>
     <string name="menu_nav_add_product">Agregar Producto</string>
     <string name="menu_nav_my_products">Mis Productos</string>
+    <string name="menu_nav_settings">Ajustes</string>
     <string name="menu_nav_logout">Cerrar Sesión</string>
 
     <!-- Strings para activity_perfil -->
     <string name="profile_title">Mi Perfil</string>
+    <string name="profile_back_button">Volver atrás</string>
     <string name="profile_picture_description">Foto de Perfil</string>
     <string name="profile_user_name_placeholder">Nombre y Apellido</string>
     <string name="profile_email_label">Email:</string>
@@ -36,6 +38,7 @@
     <string name="profile_phone_placeholder">Teléfono: N/A</string>
     <string name="profile_address_placeholder">Dirección: N/A</string>
     <string name="profile_settings_option">Ajustes</string>
+    <string name="profile_delete_account_option">Eliminar Cuenta</string>
     <string name="profile_edit_profile_option">Editar Perfil</string>
     <string name="profile_navigation_indicator">›</string>
 
@@ -66,7 +69,7 @@
     <string name="edit_profile_delete_account_button">Eliminar Cuenta</string>
 
     <!-- Strings para activity_editar_producto -->
-    <string name="edit_product_title">✏️ Editar Producto</string>
+    <string name="edit_product_title">Editar Producto</string>
     <string name="edit_product_subtitle">Modifica la información del producto</string>
     <string name="edit_product_image_section_title">Imagen del Producto</string>
     <string name="edit_product_image_description">Imagen del producto</string>

@@ -211,6 +211,9 @@ public class Menu extends AppCompatActivity {
             chip.setCheckable(true);
             chip.setTextColor(getResources().getColor(android.R.color.white, null));
             chip.setChipBackgroundColorResource(R.color.chip_background_selector);
+            chip.setTypeface(getResources().getFont(R.font.roland_variable_full));
+            chip.setChipStrokeWidth(6f); // Ancho del borde
+            chip.setChipStrokeColor(getResources().getColorStateList(R.color.chip_stroke_selector, null));
 
             chip.setOnClickListener(v -> {
                 if (chip.isChecked()) {
@@ -232,6 +235,9 @@ public class Menu extends AppCompatActivity {
         // Configurar el chip "Todas"
         Chip chipTodas = findViewById(R.id.chipTodas);
         if (chipTodas != null) {
+            chipTodas.setTypeface(getResources().getFont(R.font.roland_variable_full));
+            chipTodas.setChipStrokeWidth(6f); // Ancho del borde
+            chipTodas.setChipStrokeColor(getResources().getColorStateList(R.color.chip_stroke_selector, null));
             chipTodas.setOnClickListener(v -> {
                 if (chipTodas.isChecked()) {
                     categoriaActual = null;
