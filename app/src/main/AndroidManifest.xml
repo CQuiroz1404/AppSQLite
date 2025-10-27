@@ -4,11 +4,13 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -19,21 +21,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppConSQLite">
-
         <activity
-            android:name=".Perfil"
+            android:name=".ui.product.DetalleProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".Menu"
+            android:name=".ui.profile.EditarPerfilActivity"
             android:exported="false" />
         <activity
-            android:name=".Registro"
+            android:name=".ui.product.EditarProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".ui.product.AgregarProductoActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.profile.Perfil"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.Menu"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.auth.Registro"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +62,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

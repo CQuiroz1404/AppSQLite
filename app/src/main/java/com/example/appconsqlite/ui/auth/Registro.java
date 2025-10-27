@@ -1,4 +1,4 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.auth;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -12,10 +12,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
@@ -26,12 +29,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream; // IMPORTACIÓN AÑADIDA
-import java.io.FileOutputStream; // IMPORTACIÓN AÑADIDA
+import java.io.InputStream;
+import java.io.FileOutputStream;
+
+import com.example.appconsqlite.R;
+import com.example.appconsqlite.data.repository.UserRepository;
 
 public class Registro extends AppCompatActivity {
 
-    private EditText editNombre, editApellido, editTelefono, editDireccion;
+    private EditText editNombre, editApellido, editDireccion;
+    private TextInputEditText editTelefono;
     private EditText editEmail, editPassword, editConfirmPassword;
     private Button btnRegister;
     private ImageButton btnSelectProfileImage;
@@ -52,9 +59,16 @@ public class Registro extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // FORZAR MODO CLARO
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registro);
+
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -245,13 +259,17 @@ public class Registro extends AppCompatActivity {
             return;
         }
 
-        // 2. Validación de coincidencia de contraseñas
+        // 2. Validación de formato de email
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Formato de email inválido", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // 3. Validación de coincidencia de contraseñas
         if (!password.equals(confirmPassword)) {
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
             return;
         }
-
-        // 3. Ya no se necesita lógica de permisos persistentes aquí.
 
         // 4. Llamada al repositorio con TODOS los datos
         boolean creado = userRepo.registrarUsuario(
@@ -261,11 +279,11 @@ public class Registro extends AppCompatActivity {
                 password,
                 telefono,
                 direccion,
-                profileImagePath // Siempre será un Path de archivo (interno o externo)
+                profileImagePath
         );
 
         if (creado) {
-            Toast.makeText(this, "Usuario " + nombre + " registrado correctamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "¡Bienvenido al Marketplace, " + nombre + "!", Toast.LENGTH_LONG).show();
             finish();
         } else {
             Toast.makeText(this, "Error: El email ya está registrado", Toast.LENGTH_LONG).show();

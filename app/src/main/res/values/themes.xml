@@ -1,8 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AppConSQLite" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Base application theme - FORZAR MODO CLARO SIEMPRE -->
+    <style name="Base.Theme.AppConSQLite" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Aplicar fuente personalizada en toda la app -->
+        <item name="android:fontFamily">@font/roland_variable_full</item>
+        <item name="fontFamily">@font/roland_variable_full</item>
+        <!-- Forzar que siempre use modo claro -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <!-- Color de la barra de estado -->
+        <item name="android:statusBarColor">@color/red_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.AppConSQLite" parent="Base.Theme.AppConSQLite" />

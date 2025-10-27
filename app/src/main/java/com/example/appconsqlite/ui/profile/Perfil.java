@@ -1,56 +1,63 @@
-package com.example.appconsqlite;
+package com.example.appconsqlite.ui.profile;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import android.graphics.BitmapFactory; // NUEVA: Para cargar imágenes desde rutas de archivo
-import java.io.File; // NUEVA: Para verificar si la ruta es un archivo
+import android.graphics.BitmapFactory;
+import java.io.File;
+
+import com.example.appconsqlite.R;
+import com.example.appconsqlite.utils.SessionManager;
+import com.example.appconsqlite.data.repository.UserRepository;
+import com.example.appconsqlite.data.database.UserContract;
 
 public class Perfil extends AppCompatActivity {
 
     // Vistas principales para mostrar datos
     private CircleImageView ivProfilePicture;
     private TextView tvUserName;
+    private ImageButton btnVolverPerfil;
 
-    // Vistas para la información de contacto (NUEVAS)
+    // Vistas para la información de contacto
     private TextView tvUserEmail;
     private TextView tvUserPhone;
     private TextView tvUserAddress;
 
-    // Contantes de SharedPreferences (deben coincidir con MainActivity)
-    private static final String PREFS_FILE = "com.example.appconsqlite.PREFERENCE_FILE_KEY";
-    private static final String USER_ID = "userId";
-
+    private SessionManager sessionManager;
     private UserRepository userRepo;
 
     // Vistas del menú de opciones
-    private LinearLayout llDireccion;
-    private LinearLayout llMetodosPago;
-    private LinearLayout llAjustes;
-    private LinearLayout llCentroAyuda;
-
+    private LinearLayout llEliminarCuenta;
+    private LinearLayout llEditarPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // FORZAR MODO CLARO
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil);
+
+        // Configurar la barra de estado con color rojo
+        getWindow().setStatusBarColor(getResources().getColor(R.color.red_primary, null));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.background_light_gray, null));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -58,7 +65,8 @@ public class Perfil extends AppCompatActivity {
             return insets;
         });
 
-        // Inicializar repositorio
+        // Inicializar SessionManager y repositorio
+        sessionManager = new SessionManager(this);
         userRepo = new UserRepository(this);
 
         // 1. Inicializar las vistas de datos
@@ -67,12 +75,14 @@ public class Perfil extends AppCompatActivity {
         tvUserEmail = findViewById(R.id.tvUserEmail);
         tvUserPhone = findViewById(R.id.tvUserPhone);
         tvUserAddress = findViewById(R.id.tvUserAddress);
+        btnVolverPerfil = findViewById(R.id.btnVolverPerfil);
 
         // 2. Inicializar los contenedores de las opciones de menú
-        llDireccion = findViewById(R.id.llDireccion);
-        llMetodosPago = findViewById(R.id.llMetodosPago);
-        llAjustes = findViewById(R.id.llAjustes);
-        llCentroAyuda = findViewById(R.id.llCentroAyuda);
+        llEliminarCuenta = findViewById(R.id.llEliminarCuenta);
+        llEditarPerfil = findViewById(R.id.llEditarPerfil);
+
+        // Configurar botón de volver
+        btnVolverPerfil.setOnClickListener(v -> finish());
 
         setupMenuListeners();
 
@@ -84,9 +94,8 @@ public class Perfil extends AppCompatActivity {
      * Carga los datos del usuario logeado desde la base de datos.
      */
     private void loadUserData() {
-        SharedPreferences sharedPref = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        // Obtener el ID del usuario. -1 es el valor por defecto si no se encuentra.
-        long userId = sharedPref.getLong(USER_ID, -1);
+        // Obtener el ID del usuario desde SessionManager
+        long userId = sessionManager.getUserId();
 
         if (userId != -1) {
             Cursor cursor = userRepo.obtenerDatosPerfil(userId);
@@ -102,13 +111,15 @@ public class Perfil extends AppCompatActivity {
                     String fotoPath = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_FOTO_PERFIL_PATH));
 
                     // Establecer el Nombre Completo
-                    String fullName = nombre + " " + apellido;
-                    tvUserName.setText(fullName);
+                    String fullName = (nombre != null ? nombre : "") + " " + (apellido != null ? apellido : "");
+                    tvUserName.setText(fullName.trim().isEmpty() ? "Nombre y Apellido" : fullName.trim());
+
+                    // Establecer Email
                     tvUserEmail.setText(email);
 
                     // Establecer Teléfono y Dirección
-                    tvUserPhone.setText(telefono.isEmpty() ? "Teléfono: N/A" : "Teléfono: " + telefono);
-                    tvUserAddress.setText(direccion.isEmpty() ? "Dirección: N/A" : "Dirección: " + direccion);
+                    tvUserPhone.setText(telefono != null && !telefono.isEmpty() ? telefono : "Teléfono: N/A");
+                    tvUserAddress.setText(direccion != null && !direccion.isEmpty() ? direccion : "Dirección: N/A");
 
                     // ==========================================================
                     // LÓGICA FINAL PARA CARGAR LA FOTO (Maneja URI y RUTAS DE ARCHIVO)
@@ -149,37 +160,27 @@ public class Perfil extends AppCompatActivity {
                                 } catch (Exception ex) {
                                     // Falla total al cargar la URI. imageLoaded sigue siendo false.
                                 }
-                            } catch (Exception e) {
-                                // URI mal formada o error genérico. imageLoaded sigue siendo false.
                             }
                         }
 
-                        // 3. Manejo de error final y visualización por defecto
+                        // 3. Si nada funcionó, usar imagen por defecto
                         if (!imageLoaded) {
-                            ivProfilePicture.setImageResource(android.R.drawable.ic_menu_camera);
-                            // Este Toast indica que falló la carga por las razones anteriores (archivo movido, URI caducada, etc.)
-                            Toast.makeText(this, "Advertencia: La foto de perfil anterior no se pudo cargar.", Toast.LENGTH_SHORT).show();
+                            ivProfilePicture.setImageResource(R.mipmap.ic_launcher);
                         }
-
                     } else {
-                        // Si no hay foto, usar la imagen por defecto
-                        ivProfilePicture.setImageResource(android.R.drawable.ic_menu_camera);
+                        // Sin foto de perfil guardada
+                        ivProfilePicture.setImageResource(R.mipmap.ic_launcher);
                     }
-                    // ==========================================================
 
-
-                } catch (IllegalArgumentException e) {
-                    Toast.makeText(this, "Error al leer columnas: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
+                    cursor.close();
                 }
             } else {
-                Toast.makeText(this, "No se encontraron datos para el usuario.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error al cargar datos del perfil", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Error: No se encontró el ID de sesión.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sesión no válida", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -187,20 +188,48 @@ public class Perfil extends AppCompatActivity {
      * Configura los listeners de clic para las opciones del menú de perfil.
      */
     private void setupMenuListeners() {
-        llDireccion.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Dirección", Toast.LENGTH_SHORT).show()
-        );
+        llEliminarCuenta.setOnClickListener(v -> mostrarDialogEliminarCuenta());
 
-        llMetodosPago.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Métodos de Pago", Toast.LENGTH_SHORT).show()
-        );
+        llEditarPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(Perfil.this, EditarPerfilActivity.class);
+            startActivity(intent);
+        });
+    }
 
-        llAjustes.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Ajustes", Toast.LENGTH_SHORT).show()
-        );
+    /**
+     * Muestra un diálogo de confirmación para eliminar la cuenta.
+     */
+    private void mostrarDialogEliminarCuenta() {
+        new AlertDialog.Builder(this)
+                .setTitle("⚠️ Eliminar Cuenta")
+                .setMessage("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer y se eliminarán todos tus datos y productos.")
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    long userId = sessionManager.getUserId();
+                    boolean eliminada = userRepo.eliminarCuenta(userId);
 
-        llCentroAyuda.setOnClickListener(v ->
-                Toast.makeText(this, "Navegando a Centro de Ayuda", Toast.LENGTH_SHORT).show()
-        );
+                    if (eliminada) {
+                        // Cerrar sesión usando SessionManager
+                        sessionManager.logout();
+
+                        Toast.makeText(this, "Cuenta eliminada exitosamente", Toast.LENGTH_SHORT).show();
+
+                        // Volver al login y limpiar la pila de actividades
+                        Intent intent = new Intent(Perfil.this, com.example.appconsqlite.ui.auth.MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Error al eliminar la cuenta", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recargar datos cuando volvemos de editar
+        loadUserData();
     }
 }

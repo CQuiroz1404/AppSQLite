@@ -1,330 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context=".Perfil">
+    android:fillViewport="true"
+    android:background="@color/background_light_gray"
+    tools:context=".ui.profile.Perfil">
 
-    <TextView
-        android:id="@+id/tvProfileTitle"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mi Perfil"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
+        android:paddingBottom="24dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@android:color/transparent"
-        android:contentDescription="Foto de Perfil"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nombre y Apellido"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/ivProfilePicture"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
-
-    <TextView
-        android:id="@+id/tvUserEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="correo@ejemplo.com"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvUserName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
-
-    <TextView
-        android:id="@+id/tvUserPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Teléfono: N/A"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvUserEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
-
-    <TextView
-        android:id="@+id/tvUserAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dirección: N/A"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tvUserPhone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/roland_variable_full" />
-    <LinearLayout
-        android:id="@+id/llQuickActions"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFCDD2"
-        android:paddingVertical="12dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvUserAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Pedidos"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pedidos"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Lista de Deseo"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Lista de Deseo"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Cupones"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cupones"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Mensajes"
-                app:tint="@color/red_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mensajes"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/roland_variable_full" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/llQuickActions"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <LinearLayout
-            android:id="@+id/llDireccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Direccion"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Dirección"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
-
+        <!-- Header con gradiente -->
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
+            android:id="@+id/headerBackground"
+            android:layout_width="0dp"
+            android:layout_height="220dp"
+            android:background="@drawable/red_gradient_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <LinearLayout
-            android:id="@+id/llMetodosPago"
-            android:layout_width="match_parent"
+        <!-- Botón de volver atrás -->
+        <ImageButton
+            android:id="@+id/btnVolverPerfil"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_back_button"
+            android:padding="12dp"
+            app:tint="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- Título sobre el gradiente -->
+        <TextView
+            android:id="@+id/tvProfileTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Metodos de Pago"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+            android:text="@string/profile_title"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/roland_variable_full"
+            android:layout_marginTop="32dp"
+            android:shadowColor="#80000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Card con foto de perfil -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardProfilePicture"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="65dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@android:color/transparent"
-                android:contentDescription="Ir a Métodos de Pago"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
+                android:contentDescription="@string/profile_picture_description"
+                android:layout_margin="8dp"
+                app:civ_border_width="3dp"
+                app:civ_border_color="@color/red_primary"/>
+        </androidx.cardview.widget.CardView>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
-
-        <LinearLayout
-            android:id="@+id/llAjustes"
-            android:layout_width="match_parent"
+        <!-- Card principal con información del usuario -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardUserInfo"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/cardProfilePicture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ajustes"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Ajustes"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:paddingTop="24dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0" />
+                <!-- Nombre del usuario -->
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_user_name_placeholder"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="@font/roland_variable_full"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"/>
 
-        <LinearLayout
-            android:id="@+id/llCentroAyuda"
-            android:layout_width="match_parent"
+                <!-- Información de contacto -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/card_background">
+
+                    <!-- Email -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_email_label"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tvUserEmail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_email_placeholder"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_secondary"
+                            android:fontFamily="@font/roland_variable_full"/>
+                    </LinearLayout>
+
+                    <!-- Teléfono -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_phone_label"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tvUserPhone"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_phone_placeholder"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_secondary"
+                            android:fontFamily="@font/roland_variable_full"/>
+                    </LinearLayout>
+
+                    <!-- Dirección -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_address_label"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/tvUserAddress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/profile_address_placeholder"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_secondary"
+                            android:fontFamily="@font/roland_variable_full"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Opciones del menú -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardOptions"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:background="@drawable/menu_item_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Centro de Ayuda"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:paddingStart="16dp"
-                android:fontFamily="@font/roland_variable_full" />
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:color/transparent"
-                android:contentDescription="Ir a Centro de Ayuda"
-                android:paddingEnd="16dp"
-                app:tint="@android:color/darker_gray" />
-        </LinearLayout>
-    </LinearLayout>
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/cardUserInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <!-- Editar Perfil -->
+                <LinearLayout
+                    android:id="@+id/llEditarPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/profile_edit_profile_option"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_primary"
+                        android:fontFamily="@font/roland_variable_full"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_navigation_indicator"
+                        android:textSize="24sp"
+                        android:textColor="@color/text_hint"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginHorizontal="16dp"/>
+
+                <!-- Eliminar Cuenta -->
+                <LinearLayout
+                    android:id="@+id/llEliminarCuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/profile_delete_account_option"
+                        android:textSize="16sp"
+                        android:textColor="@color/red_primary"
+                        android:fontFamily="@font/roland_variable_full"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_navigation_indicator"
+                        android:textSize="24sp"
+                        android:textColor="@color/red_primary"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

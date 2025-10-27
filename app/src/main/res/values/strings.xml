@@ -1,4 +1,115 @@
 <resources>
-    <string name="app_name">AppConSQLite</string>
+    <string name="app_name">Marketplace</string>
     <string name="full_name_format">%1$s %2$s</string>
+    <string name="subtitle_marketplace">Compra y vende productos</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="btn_register">Crear Cuenta</string>
+    <string name="no_account">¿No tienes cuenta?</string>
+
+    <!-- Strings para activity_main -->
+    <string name="main_logo_description">Logo Marketplace</string>
+    <string name="main_login_button">Ingresar</string>
+    <string name="main_no_account_prompt">¿No tienes cuenta?</string>
+    <string name="main_register_button">Registrarse</string>
+
+    <!-- Strings para activity_menu -->
+    <string name="menu_options_description">Menú de Opciones</string>
+    <string name="menu_welcome_title">Bienvenido al Marketplace</string>
+    <string name="menu_logo_description">Logo</string>
+    <string name="menu_nav_header_title">Menú de Opciones</string>
+    <string name="menu_nav_my_account">Mi Cuenta</string>
+    <string name="menu_nav_add_product">Agregar Producto</string>
+    <string name="menu_nav_my_products">Mis Productos</string>
+    <string name="menu_nav_settings">Ajustes</string>
+    <string name="menu_nav_logout">Cerrar Sesión</string>
+
+    <!-- Strings para activity_perfil -->
+    <string name="profile_title">Mi Perfil</string>
+    <string name="profile_back_button">Volver atrás</string>
+    <string name="profile_picture_description">Foto de Perfil</string>
+    <string name="profile_user_name_placeholder">Nombre y Apellido</string>
+    <string name="profile_email_label">Email:</string>
+    <string name="profile_phone_label">Teléfono:</string>
+    <string name="profile_address_label">Dirección:</string>
+    <string name="profile_email_placeholder">correo@ejemplo.com</string>
+    <string name="profile_phone_placeholder">Teléfono: N/A</string>
+    <string name="profile_address_placeholder">Dirección: N/A</string>
+    <string name="profile_settings_option">Ajustes</string>
+    <string name="profile_delete_account_option">Eliminar Cuenta</string>
+    <string name="profile_edit_profile_option">Editar Perfil</string>
+    <string name="profile_navigation_indicator">›</string>
+
+    <!-- Strings para activity_registro -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Completa tus datos</string>
+    <string name="register_profile_picture_description">Foto de Perfil</string>
+    <string name="register_select_photo_description">Seleccionar Foto</string>
+    <string name="register_personal_info_title">Información Personal</string>
+    <string name="register_credentials_title">Credenciales de Acceso</string>
+    <string name="register_name_hint">Nombre</string>
+    <string name="register_lastname_hint">Apellido</string>
+    <string name="register_phone_hint">Teléfono</string>
+    <string name="register_address_hint">Dirección Principal</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_password_hint">Contraseña</string>
+    <string name="register_confirm_password_hint">Confirmar Contraseña</string>
+    <string name="register_create_account_button">Crear Cuenta</string>
+
+    <!-- Strings para activity_editar_perfil -->
+    <string name="edit_profile_title">Editar Perfil</string>
+    <string name="edit_profile_change_photo_description">Cambiar Foto</string>
+    <string name="edit_profile_account_info_title">Información de Cuenta</string>
+    <string name="edit_profile_address_hint">Dirección</string>
+    <string name="edit_profile_phone_prefix">+56 </string>
+    <string name="edit_profile_save_button">Guardar Cambios</string>
+    <string name="edit_profile_change_password_button">Cambiar Contraseña</string>
+    <string name="edit_profile_delete_account_button">Eliminar Cuenta</string>
+
+    <!-- Strings para activity_editar_producto -->
+    <string name="edit_product_title">Editar Producto</string>
+    <string name="edit_product_subtitle">Modifica la información del producto</string>
+    <string name="edit_product_image_section_title">Imagen del Producto</string>
+    <string name="edit_product_image_description">Imagen del producto</string>
+    <string name="edit_product_change_image_button">Cambiar Imagen</string>
+    <string name="edit_product_info_section_title">Información del Producto</string>
+    <string name="edit_product_name_hint">Nombre del Producto *</string>
+    <string name="edit_product_description_hint">Descripción</string>
+    <string name="edit_product_price_hint">Precio * ($)</string>
+    <string name="edit_product_price_prefix">$ </string>
+    <string name="edit_product_quantity_section_title">Cantidad en Stock</string>
+    <string name="edit_product_quantity_placeholder">1</string>
+    <string name="edit_product_update_button">Actualizar Producto</string>
+    <string name="edit_product_delete_button">Eliminar Producto</string>
+
+    <!-- Strings para activity_agregar_producto -->
+    <string name="add_product_title">Agregar Producto</string>
+    <string name="add_product_subtitle">Completa la información del producto</string>
+    <string name="add_product_image_section_title">Imagen del Producto</string>
+    <string name="add_product_image_description">Imagen del producto</string>
+    <string name="add_product_select_image_button">Seleccionar Imagen</string>
+    <string name="add_product_info_section_title">Información del Producto</string>
+    <string name="add_product_name_hint">Título del producto</string>
+    <string name="add_product_description_hint">Descripción</string>
+    <string name="add_product_price_hint">Precio (CLP - Pesos Chilenos)</string>
+    <string name="add_product_price_prefix">$ </string>
+    <string name="add_product_quantity_section_title">Cantidad a Agregar</string>
+    <string name="add_product_quantity_placeholder">1</string>
+    <string name="add_product_upload_button">Subir Producto</string>
+
+    <!-- Strings para activity_detalle_producto -->
+    <string name="detail_product_title">Detalles del Producto</string>
+    <string name="detail_product_image_description">Imagen del producto</string>
+    <string name="detail_product_name_placeholder">Nombre del Producto</string>
+    <string name="detail_product_price_placeholder">$0.00</string>
+    <string name="detail_product_quantity_placeholder">0</string>
+    <string name="detail_product_description_placeholder">Descripción del producto</string>
+    <string name="detail_product_quantity_label">Cantidad disponible</string>
+    <string name="detail_product_description_label">Descripción</string>
+    <string name="detail_product_seller_info_label">Información del vendedor</string>
+    <string name="detail_product_edit_button">Editar Producto</string>
+    <string name="detail_product_delete_button">Eliminar Producto</string>
+    <string name="detail_product_back_button">Volver</string>
 </resources>
