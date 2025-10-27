@@ -1,10 +1,12 @@
 package com.example.appconsqlite.ui.profile;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import java.io.File;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.example.appconsqlite.data.repository.UserRepository;
+import com.example.appconsqlite.utils.PermissionHelper;
 import com.example.appconsqlite.data.database.UserContract;
 import com.example.appconsqlite.utils.SessionManager;
 
@@ -44,6 +47,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private long userId;
     private String fotoPerfilPath = "";
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
     // Launcher para seleccionar imagen
     private ActivityResultLauncher<Intent> galeriaLauncher;
@@ -79,7 +83,6 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         userRepo = new UserRepository(this);
 
-        // Obtener userId desde SessionManager
         sessionManager = new SessionManager(this);
         userId = sessionManager.getUserId();
 
@@ -89,7 +92,23 @@ public class EditarPerfilActivity extends AppCompatActivity {
             return;
         }
 
-        // Configurar launcher para galería
+        // Maneja solicitud de permisos de galería
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                    boolean readExternal = permissions.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false);
+                    boolean readMediaImages = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        readMediaImages = permissions.getOrDefault(Manifest.permission.READ_MEDIA_IMAGES, false);
+                    }
+                    boolean storageGranted = readExternal || readMediaImages;
+
+                    if (storageGranted) {
+                        abrirGaleria();
+                    } else {
+                        Toast.makeText(this, "Permiso de galería denegado", Toast.LENGTH_LONG).show();
+                    }
+                });
+
         galeriaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -99,7 +118,6 @@ public class EditarPerfilActivity extends AppCompatActivity {
                             ivPerfilEditar.setImageURI(imageUri);
                             fotoPerfilPath = imageUri.toString();
 
-                            // Obtener permiso persistente
                             try {
                                 int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
                                 getContentResolver().takePersistableUriPermission(imageUri, takeFlags);
@@ -111,11 +129,9 @@ public class EditarPerfilActivity extends AppCompatActivity {
                 }
         );
 
-        // Cargar datos actuales
         cargarDatosUsuario();
 
-        // Configurar listeners
-        btnSeleccionarFoto.setOnClickListener(v -> abrirGaleria());
+        btnSeleccionarFoto.setOnClickListener(v -> checkGalleryPermissionAndOpen());
         btnGuardarCambios.setOnClickListener(v -> guardarCambios());
         btnCambiarPassword.setOnClickListener(v -> mostrarDialogCambiarPassword());
         btnEliminarCuenta.setOnClickListener(v -> mostrarDialogEliminarCuenta());
@@ -166,6 +182,14 @@ public class EditarPerfilActivity extends AppCompatActivity {
         galeriaLauncher.launch(intent);
     }
 
+    private void checkGalleryPermissionAndOpen() {
+        if (!PermissionHelper.hasStoragePermission(this)) {
+            requestPermissionLauncher.launch(PermissionHelper.getGalleryPermissions());
+        } else {
+            abrirGaleria();
+        }
+    }
+
     private void guardarCambios() {
         // Limpiar errores
         tilNombre.setError(null);
@@ -182,16 +206,19 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         boolean isValid = true;
 
+        // Validar que el nombre no esté vacío
         if (TextUtils.isEmpty(nombre)) {
             tilNombre.setError("El nombre no puede estar vacío");
             isValid = false;
         }
 
+        // Validar que el apellido no esté vacío
         if (TextUtils.isEmpty(apellido)) {
             tilApellido.setError("El apellido no puede estar vacío");
             isValid = false;
         }
 
+        // Validar que el email no esté vacío y tenga formato correcto
         if (TextUtils.isEmpty(email)) {
             tilEmail.setError("El email no puede estar vacío");
             isValid = false;
@@ -253,16 +280,19 @@ public class EditarPerfilActivity extends AppCompatActivity {
             String passwordNueva = etPasswordNueva.getText().toString();
             String passwordConfirmar = etPasswordConfirmar.getText().toString();
 
+            // Validar que todos los campos estén completos
             if (TextUtils.isEmpty(passwordAntigua) || TextUtils.isEmpty(passwordNueva)) {
                 Toast.makeText(this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Validar que las contraseñas nuevas coincidan
             if (!passwordNueva.equals(passwordConfirmar)) {
                 Toast.makeText(this, "Las contraseñas nuevas no coinciden", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Validar longitud mínima de la contraseña
             if (passwordNueva.length() < 6) {
                 Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
                 return;

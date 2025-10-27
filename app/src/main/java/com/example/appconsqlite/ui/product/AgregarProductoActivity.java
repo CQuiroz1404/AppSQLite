@@ -4,8 +4,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.ProductRepository;
 import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.PermissionHelper;
 import com.example.appconsqlite.utils.SessionManager;
 import com.example.appconsqlite.utils.ImageHelper;
 
@@ -33,6 +36,7 @@ public class AgregarProductoActivity extends AppCompatActivity {
     SessionManager sessionManager;
     long userId;
     private int cantidad = 1;
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
     private String categoriaSeleccionada = ProductContract.Categories.OTROS;
 
     private ActivityResultLauncher<Intent> galleryLauncher;
@@ -69,10 +73,26 @@ public class AgregarProductoActivity extends AppCompatActivity {
             return;
         }
 
-        // Configurar botón de volver
         btnVolverAgregarProducto.setOnClickListener(v -> finish());
 
         tvCategoriaSeleccionada.setText(categoriaSeleccionada);
+
+        // Maneja solicitud de permisos de galería
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                    boolean readExternal = permissions.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false);
+                    boolean readMediaImages = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        readMediaImages = permissions.getOrDefault(Manifest.permission.READ_MEDIA_IMAGES, false);
+                    }
+                    boolean storageGranted = readExternal || readMediaImages;
+
+                    if (storageGranted) {
+                        abrirGaleria();
+                    } else {
+                        Toast.makeText(this, "Permiso de galería denegado", Toast.LENGTH_LONG).show();
+                    }
+                });
 
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -84,7 +104,7 @@ public class AgregarProductoActivity extends AppCompatActivity {
                     }
                 });
 
-        btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
+        btnSeleccionarImagen.setOnClickListener(v -> checkGalleryPermissionAndOpen());
         btnSubir.setOnClickListener(v -> subirProducto());
         btnSeleccionarCategoria.setOnClickListener(v -> mostrarSelectorCategoria());
 
@@ -119,16 +139,26 @@ public class AgregarProductoActivity extends AppCompatActivity {
         galleryLauncher.launch(intent);
     }
 
+    private void checkGalleryPermissionAndOpen() {
+        if (!PermissionHelper.hasStoragePermission(this)) {
+            requestPermissionLauncher.launch(PermissionHelper.getGalleryPermissions());
+        } else {
+            abrirGaleria();
+        }
+    }
+
     private void subirProducto() {
         String nombre = etNombre.getText().toString().trim();
         String descripcion = etDescripcion.getText().toString().trim();
         String precioStr = etPrecio.getText().toString().trim();
 
+        // Validar campos obligatorios (nombre y precio)
         if (nombre.isEmpty() || precioStr.isEmpty()) {
             Toast.makeText(this, "Completa los campos obligatorios (Nombre y Precio)", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Validar que el precio sea un número válido y mayor a 0
         double precio;
         try {
             precio = Double.parseDouble(precioStr);

@@ -3,8 +3,8 @@ package com.example.appconsqlite.ui.auth;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
@@ -19,7 +19,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -33,6 +32,7 @@ import java.io.InputStream;
 import java.io.FileOutputStream;
 
 import com.example.appconsqlite.R;
+import com.example.appconsqlite.utils.PermissionHelper;
 import com.example.appconsqlite.data.repository.UserRepository;
 
 public class Registro extends AppCompatActivity {
@@ -48,6 +48,9 @@ public class Registro extends AppCompatActivity {
     private Uri currentPhotoUri;
     private String currentPhotoPath; // Ruta absoluta del archivo de cámara.
 
+
+    // Variable para rastrear qué acción inició la solicitud de permisos
+    private boolean requestingCameraPermission = false;
     // Variable para almacenar la ruta final de la imagen a guardar en la DB (Path)
     private String profileImagePath = "";
 
@@ -101,53 +104,57 @@ public class Registro extends AppCompatActivity {
         // 2. Listener para seleccionar la foto
         btnSelectProfileImage.setOnClickListener(v -> showImageSourceDialog());
 
-        // 3. Lógica de registro
         btnRegister.setOnClickListener(v -> handleRegistration());
     }
 
-    // ==========================================================
-    // MÉTODOS DE CÁMARA/GALERÍA
-    // ==========================================================
-
     private void setupActivityResultLaunchers() {
-        // Inicializa el lanzador para solicitar permisos
+        // Maneja respuesta de solicitud de permisos (cámara o galería según flag)
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
                     boolean cameraGranted = permissions.getOrDefault(Manifest.permission.CAMERA, false);
-                    boolean storageGranted = permissions.getOrDefault(Manifest.permission.WRITE_EXTERNAL_STORAGE, true);
+                    boolean readExternal = permissions.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false);
+                    boolean readMediaImages = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        readMediaImages = permissions.getOrDefault(Manifest.permission.READ_MEDIA_IMAGES, false);
+                    }
+                    boolean storageGranted = readExternal || readMediaImages;
 
-                    if (cameraGranted && storageGranted) {
-                        startCameraIntent();
+                    if (requestingCameraPermission) {
+                        if (cameraGranted) {
+                            startCameraIntent();
+                        } else {
+                            Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_LONG).show();
+                        }
+                        requestingCameraPermission = false;
                     } else {
-                        Toast.makeText(this, "Permisos denegados. No se puede acceder a la cámara o galería.", Toast.LENGTH_LONG).show();
+                        if (storageGranted) {
+                            startGalleryIntent();
+                        } else {
+                            Toast.makeText(this, "Permiso de galería denegado", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
-        // Inicializa el lanzador para la Cámara
+        // Maneja resultado de la cámara
         cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         if (currentPhotoUri != null) {
                             ivRegistroProfilePicture.setImageURI(currentPhotoUri);
-                            // Usamos la ruta de archivo persistente (Path)
                             profileImagePath = currentPhotoPath;
                         }
                     }
                 });
 
-        // Inicializa el lanzador para la Galería
+        // Maneja resultado de la galería
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri selectedImageUri = result.getData().getData();
                         if (selectedImageUri != null) {
                             try {
-                                // FIX GALERÍA: Copiamos la URI a un archivo privado
                                 String internalPath = copyUriToInternalStorage(selectedImageUri);
-
-                                ivRegistroProfilePicture.setImageURI(selectedImageUri); // Previsualización
-
-                                // Guardamos la RUTA DE ARCHIVO INTERNA (Path)
+                                ivRegistroProfilePicture.setImageURI(selectedImageUri);
                                 profileImagePath = internalPath;
 
                             } catch (IOException e) {
@@ -168,7 +175,7 @@ public class Registro extends AppCompatActivity {
                     checkCameraPermissionAndStartCamera();
                     break;
                 case 1:
-                    startGalleryIntent();
+                    checkGalleryPermissionAndOpen();
                     break;
             }
         });
@@ -176,37 +183,56 @@ public class Registro extends AppCompatActivity {
     }
 
     private void checkCameraPermissionAndStartCamera() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissionLauncher.launch(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE});
+        if (!PermissionHelper.hasCameraPermission(this)) {
+            requestingCameraPermission = true;
+            requestPermissionLauncher.launch(PermissionHelper.getCameraPermissions());
         } else {
             startCameraIntent();
+        }
+    }
+
+    private void checkGalleryPermissionAndOpen() {
+        if (!PermissionHelper.hasStoragePermission(this)) {
+            requestingCameraPermission = false;
+            requestPermissionLauncher.launch(PermissionHelper.getGalleryPermissions());
+        } else {
+            startGalleryIntent();
         }
     }
 
     private void startCameraIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
             try {
-                // Crear el archivo donde debe ir la foto
-                File photoFile = createImageFile();
-                if (photoFile != null) {
-                    // Guardar la ruta absoluta del archivo
-                    currentPhotoPath = photoFile.getAbsolutePath();
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Toast.makeText(this, "Error al crear archivo de imagen: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
 
-                    // Obtener URI con FileProvider
+            if (photoFile != null) {
+                try {
+                    currentPhotoPath = photoFile.getAbsolutePath();
                     currentPhotoUri = FileProvider.getUriForFile(this,
                             getApplicationContext().getPackageName() + ".fileprovider",
                             photoFile);
+
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
                     cameraLauncher.launch(takePictureIntent);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error al abrir la cámara: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } catch (IOException ex) {
-                Toast.makeText(this, "Error al crear archivo de imagen.", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(this, "No se encontró una aplicación de cámara", Toast.LENGTH_LONG).show();
         }
     }
 
-    // MÉTODO AÑADIDO: Copia la URI a un archivo interno
+    // Copia imagen de URI externa a almacenamiento interno de la app
     private String copyUriToInternalStorage(Uri uri) throws IOException {
         String fileName = "profile_" + System.currentTimeMillis() + ".jpg";
         File targetFile = new File(getFilesDir(), fileName);
@@ -225,24 +251,26 @@ public class Registro extends AppCompatActivity {
         return targetFile.getAbsolutePath();
     }
 
+    // Crea archivo temporal para la foto con timestamp único
     private File createImageFile() throws IOException {
         String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";
         File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(
-                imageFileName,  /* prefijo */
-                ".jpg",         /* sufijo */
-                storageDir      /* directorio */
-        );
+
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        if (storageDir == null) {
+            throw new IOException("No se pudo acceder al directorio de almacenamiento");
+        }
+
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
     private void startGalleryIntent() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryLauncher.launch(intent);
     }
-
-    // ==========================================================
-    // LÓGICA DE REGISTRO
-    // ==========================================================
 
     private void handleRegistration() {
         String nombre = editNombre.getText().toString().trim();
@@ -253,25 +281,24 @@ public class Registro extends AppCompatActivity {
         String password = editPassword.getText().toString().trim();
         String confirmPassword = editConfirmPassword.getText().toString().trim();
 
-        // 1. Validación de campos vacíos
+        // Validar que campos obligatorios no estén vacíos
         if (nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Completa los campos obligatorios (*)", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 2. Validación de formato de email
+        // Validar formato correcto de email
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(this, "Formato de email inválido", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 3. Validación de coincidencia de contraseñas
+        // Validar que las contraseñas coincidan
         if (!password.equals(confirmPassword)) {
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 4. Llamada al repositorio con TODOS los datos
         boolean creado = userRepo.registrarUsuario(
                 nombre,
                 apellido,

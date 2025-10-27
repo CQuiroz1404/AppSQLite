@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <external-path name="my_images" path="Android/data/com.example.appconsqlite/files/Pictures" />
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Para archivos de la cámara en getExternalFilesDir() -->
+    <external-files-path name="my_images" path="Pictures/" />
+
+    <!-- Para archivos internos en getFilesDir() -->
+    <files-path name="my_internal_images" path="." />
+
+    <!-- Para caché si es necesario -->
+    <cache-path name="my_cache" path="." />
 </paths>

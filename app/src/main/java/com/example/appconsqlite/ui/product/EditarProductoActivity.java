@@ -1,8 +1,10 @@
 package com.example.appconsqlite.ui.product;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import java.io.File;
 import com.example.appconsqlite.R;
 import com.example.appconsqlite.data.repository.ProductRepository;
 import com.example.appconsqlite.data.database.ProductContract;
+import com.example.appconsqlite.utils.PermissionHelper;
 import com.example.appconsqlite.utils.SessionManager;
 import com.example.appconsqlite.utils.ImageHelper;
 
@@ -39,6 +42,7 @@ public class EditarProductoActivity extends AppCompatActivity {
     ProductRepository productRepo;
     SessionManager sessionManager;
     long userId;
+    private ActivityResultLauncher<String[]> requestPermissionLauncher;
     long productId;
 
     private ActivityResultLauncher<Intent> galleryLauncher;
@@ -80,7 +84,6 @@ public class EditarProductoActivity extends AppCompatActivity {
             return;
         }
 
-        // Configurar botón de volver
         btnVolverEditarProducto.setOnClickListener(v -> finish());
 
         if (!productRepo.esProductoDelUsuario(productId, userId)) {
@@ -88,6 +91,23 @@ public class EditarProductoActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Maneja solicitud de permisos de galería
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                    boolean readExternal = permissions.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false);
+                    boolean readMediaImages = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        readMediaImages = permissions.getOrDefault(Manifest.permission.READ_MEDIA_IMAGES, false);
+                    }
+                    boolean storageGranted = readExternal || readMediaImages;
+
+                    if (storageGranted) {
+                        abrirGaleria();
+                    } else {
+                        Toast.makeText(this, "Permiso de galería denegado", Toast.LENGTH_LONG).show();
+                    }
+                });
 
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -101,7 +121,7 @@ public class EditarProductoActivity extends AppCompatActivity {
 
         cargarDatosProducto();
 
-        btnSeleccionarImagen.setOnClickListener(v -> abrirGaleria());
+        btnSeleccionarImagen.setOnClickListener(v -> checkGalleryPermissionAndOpen());
         btnActualizar.setOnClickListener(v -> actualizarProducto());
         btnEliminar.setOnClickListener(v -> eliminarProducto());
         btnSeleccionarCategoria.setOnClickListener(v -> mostrarSelectorCategoria());
@@ -175,16 +195,26 @@ public class EditarProductoActivity extends AppCompatActivity {
         galleryLauncher.launch(intent);
     }
 
+    private void checkGalleryPermissionAndOpen() {
+        if (!PermissionHelper.hasStoragePermission(this)) {
+            requestPermissionLauncher.launch(PermissionHelper.getGalleryPermissions());
+        } else {
+            abrirGaleria();
+        }
+    }
+
     private void actualizarProducto() {
         String nombre = etNombre.getText().toString().trim();
         String descripcion = etDescripcion.getText().toString().trim();
         String precioStr = etPrecio.getText().toString().trim();
 
+        // Validar campos obligatorios (nombre y precio)
         if (nombre.isEmpty() || precioStr.isEmpty()) {
             Toast.makeText(this, "Completa los campos obligatorios", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Validar que el precio sea un número válido y mayor a 0
         double precio;
         try {
             precio = Double.parseDouble(precioStr);

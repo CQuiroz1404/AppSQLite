@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             boolean isValid = true;
 
+            // Validar que el email no esté vacío y tenga formato correcto
             if (TextUtils.isEmpty(email)) {
                 tilEmail.setError("El email no puede estar vacío");
                 isValid = false;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             }
 
+            // Validar que la contraseña no esté vacía
             if (TextUtils.isEmpty(password)) {
                 tilPassword.setError("La contraseña no puede estar vacía");
                 isValid = false;
