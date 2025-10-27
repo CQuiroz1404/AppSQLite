@@ -71,6 +71,34 @@ public class UserRepository {
         return existe;
     }
 
+    // Obtener ID del usuario por email (NUEVO MÉTODO)
+    public long getUserIdByEmail(String email) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        long userId = -1;
+
+        String[] projection = { UserContract.UserEntry._ID };
+        String selection = UserContract.UserEntry.COLUMN_EMAIL + "=?";
+        String[] selectionArgs = { email };
+
+        Cursor cursor = db.query(
+                UserContract.UserEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            userId = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry._ID));
+        }
+
+        cursor.close();
+        db.close();
+        return userId;
+    }
+    
     // Obtener ID del usuario por email
     public long obtenerUserId(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();

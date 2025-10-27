@@ -41,6 +41,7 @@ public class Perfil extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private UserRepository userRepo;
+    private String currentUserEmail;
 
     // Vistas del menú de opciones
     private LinearLayout llEliminarCuenta;
@@ -116,6 +117,7 @@ public class Perfil extends AppCompatActivity {
 
                     // Establecer Email
                     tvUserEmail.setText(email);
+                    this.currentUserEmail = email;
 
                     // Establecer Teléfono y Dirección
                     tvUserPhone.setText(telefono != null && !telefono.isEmpty() ? telefono : "Teléfono: N/A");
@@ -191,8 +193,13 @@ public class Perfil extends AppCompatActivity {
         llEliminarCuenta.setOnClickListener(v -> mostrarDialogEliminarCuenta());
 
         llEditarPerfil.setOnClickListener(v -> {
-            Intent intent = new Intent(Perfil.this, EditarPerfilActivity.class);
-            startActivity(intent);
+            if (currentUserEmail != null && !currentUserEmail.isEmpty()) {
+                Intent intent = new Intent(Perfil.this, EditarPerfilActivity.class);
+                intent.putExtra("USER_EMAIL", currentUserEmail);
+                startActivity(intent);
+            } else {
+                Toast.makeText(Perfil.this, "Error: No se ha podido cargar el email del usuario.", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
